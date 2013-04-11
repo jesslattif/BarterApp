@@ -1,4 +1,10 @@
 # USing PostgreSQL which I don't know, so not sure how to format these. 
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import create_engine, types 
+from sqlalchemy import Column, Integer, String, Date
+from sqlalchemy.orm import sessionmaker, scoped_session #like sqlite3 cursor - describes how to interact with database, needs to be instantiated
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship, backref
 
 class User(Base): #all users who sign up
 	__tablename__ = 'users'
