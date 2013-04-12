@@ -6,13 +6,23 @@ from sqlalchemy.orm import sessionmaker, scoped_session #like sqlite3 cursor - d
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship, backref
 
+engine = create_engine("sqlite:///ratings.db", echo=False) #creates engine that connects to db
+session = scoped_session(sessionmaker(bind=engine, autocommit = False, autoflush = False)) # set a variable that will be used by sessionmaker to help interact with ratings.db, now we don't need the "connect()" function
+
+# the variable connecting to the declarative_base function of sqlalchemy - just do it!
+Base = declarative_base()
+Base.query = session.query_property()
+
+
 class User(Base): #all users who sign up
 	__tablename__ = 'users'
 
 	id = Column(Integer, primary_key=True)
 	email = Column(String(64))
 	password = Column(String(64))
-	username = Column(String(64))
+	first_name = Column(String(64))
+	last_name = Column(String(64))
+	zipcode = Column(String(16))
 	biz_name = Column(String(64))
 	website = Column(String(255))
 	image_url = Column(String(255))
@@ -51,14 +61,14 @@ class Participant(Base): #participants in specific trades
 	trade_item_id = Column(Integer, ForeignKey("trades.id"))
 	total_qty = Column(Integer) #should use "smallint"?
 	current_qty = Column(Integer, nullable=True)
-	confirm = Column(Boolean)#is this the right way to do this?
+	confirm = Column(Integer)#not sure how to do this -- if it's a good, it's not a service, and vice-versa, Integer is a placeholder for Boolean cuz don't know how to set this up
 
 class Category(Base):
 	__tablename__ = 'categories'
 
 	id = Column(Integer, primary_key=True)
-	good = Column(Boolean) #not sure how to do this -- if it's a good, it's not a service, and vice-versa
-	service = Column(Boolean)
+	good = Column(Integer) #not sure how to do this -- if it's a good, it's not a service, and vice-versa, Integer is a placeholder for Boolean cuz don't know how to set this up
+	service = Column(Integer) #not sure how to do this -- if it's a good, it's not a service, and vice-versa, Integer is a placeholder for Boolean cuz don't know how to set this up
 	name = Column(String(64))
 
 class Reviews(Base):
@@ -66,7 +76,7 @@ class Reviews(Base):
 	id = Column(Integer, primary_key=True)
 	review = Column(String(1024))
 	rating = Column(Integer)
-	trade_id = COlumn(Integer, ForeignKey("trades.id"))
+	trade_id = Column(Integer, ForeignKey("trades.id"))
 
 
 
