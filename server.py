@@ -52,7 +52,7 @@ def authenticate(): # authenticate user
 
 	print "SUCCEEDED" 
 	session["user_id"] = user.id #set session
-	return redirect("/my_homepage") #redirects to user's movie ratings page for unique user id
+	return redirect("/my_barter_profile") #redirects to user's movie ratings page for unique user id
 
 
 """Go to user's homepage"""
@@ -62,9 +62,48 @@ def go_to_homepage():
 	user_id = session.get("user_id") #gets user ID from current session
 	if not user_id: # redirects to log-in if no user ID session
 		return redirect("/log_in")
-	return render_template("my_barter_profile.html")
+	user = db_session.query(User).filter_by(id = user_id).first()
+	user_name = user.first_name
+
+	return render_template("my_barter_profile.html", user_name = user_name)
+
+"""See all of User's Items """
+
+@app.route("/manage_items")
+def manage_items():
+	user_id = session.get("user_id")
+	if not user_id: # redirects to log-in if no user ID session
+		return redirect("/log_in")
+
+	user = db_session.query(User).get(user_id) #gets user object based on user_id
+	#need to write a function if items, if no items.
+	items = user.items #db_session.query(Item).filter_by(id=items.user_id).all()
+	print items[0].name
+	return render_template("manage_items.html", user_items =items)
+
+"""Update Item Name"""
+
+"""Update Item Description"""
+
+"""Delete Item"""
+
+@app.route("/manage_trades")
+def manage_trades():
+	pass
 
 
+@app.route("/find_partners")
+def find_partners():
+	pass
+
+@app.route("/open_request")
+def open_request():
+	pass
+
+
+@app.route("/manage_account")
+def manage_account():
+	pass
 
 
 

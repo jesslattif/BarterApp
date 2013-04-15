@@ -1,0 +1,20 @@
+<html>
+<body>
+ <h1>My Items</h1>
+
+
+
+ 	<table>
+		<tr>
+			<td><strong>Name</strong></td>
+			<td><strong>Description</strong></td>
+		</tr>
+
+ 		{% for item in user_items %}	
+ 		<td>{{ item.name }}</td>
+ 		<td>{{ item.description}}</td>
+ 
+ {% endfor %}
+
+</body>
+</html>
