@@ -1,0 +1,14 @@
+<html>
+<h1>Edit {{item.name}} </h1>
+<h2>
+ <br>
+ <br> 
+
+
+
+Change {{ item.name }} to <form name ="edit name" action="{{url_for('update_item', id=item.id)}}" methods="POST">
+  	New name: <input type="text", name="name">
+  	<input type="submit" value="submit">
+  </form></h3>
+</body>
+<html>

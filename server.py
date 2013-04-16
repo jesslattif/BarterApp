@@ -13,11 +13,21 @@ app.secret_key ="RZEB`YhM#EO|rhVWx~|U9,iYauiv l7B1t=ntDr7l-W&aM}JS2%"
 def index():
 	return render_template("index.html")
 
+
+
+######################################################
+######################################################
+######### These are the user functions #########
+######################################################
+######################################################
+
+
 	"""Sign up page"""
 
 @app.route("/sign_up")
 def sign_up():
 	return render_template("sign_up.html")
+
 
 
 """Create a new user""" 
@@ -67,6 +77,14 @@ def go_to_homepage():
 
 	return render_template("my_barter_profile.html", user_name = user_name)
 
+
+######################################################
+######################################################
+######### These are the Item functions #########
+#####################################################
+#####################################################
+
+
 """See all of User's Items """
 
 @app.route("/manage_items")
@@ -76,28 +94,105 @@ def manage_items():
 		return redirect("/log_in")
 
 	user = db_session.query(User).get(user_id) #gets user object based on user_id
-	#need to write a function if items, if no items.
-	items = user.items #db_session.query(Item).filter_by(id=items.user_id).all()
-	print items[0].name
-	return render_template("manage_items.html", user_items =items)
+	items = user.items 
+	return render_template("manage_items.html", user_items =items, user=user)
 
-"""Update Item Name"""
 
-"""Update Item Description"""
+"""Add new item"""
+@app.route('/add_item')
+def add_item():
+	user_id = session.get("user_id")
+	if not user_id: # redirects to log-in if no user ID session
+		return redirect("/log_in")
+	return render_template("add_item.html", user=user_id)
+
+
+@app.route("/insert_item", methods=["POST"])
+def insert_item():
+	user_id = session.get("user_id")
+	if not user_id: # redirects to log-in if no user ID session
+		return redirect("/log_in")
+	user = db_session.query(User).get(user_id)#gets user
+	name_string = str(request.form["name"]) #takes in new item name as a string
+	descr_string = str(request.form["description"]) #takes in new item description as a string 
+	new_name = Item(name=name_string, description=descr_string) #creates new item object from user's input
+	new_name.user = user #attach item object to user object
+	
+	db_session.commit()
+	return redirect("/manage_items")
+
+
+"""Edit item name"""
+
+@app.route("/edit_item/<int:id>", methods=["GET"])
+def edit_item(id):
+	user_id = session.get("user_id")
+	if not user_id: # redirects to log-in if no user ID session
+		return redirect("/log_in")
+	item = db_session.query(Item).get(id)
+	return render_template("/edit_item.html", item=item)
+
+
+"""Update edited item name"""
+
+@app.route("/update_item", methods=["POST"])
+def update_item(id):
+	user_id = session.get("user_id")
+	if not user_id: # redirects to log-in if no user ID session
+		return redirect("/log_in")
+	user = db_session.query(User).get(user_id)
+	item = db_session.query(Item).get(id)
+	name_string = str(request.form["name"]) # takes in updated item name as string
+	new_name = db_session.execute("UPDATE items SET name = ? WHERE id = ?" ("name_string", "item"))
+	return redirect("/manage_items.html")
+
+"""Change Item Description"""
+
+@app.route("/edit_description", methods=["POST"])
+def edit_description():
+	user_id = session.get("user_id")
+	if not user_id: # redirects to log-in if no user ID session
+		return redirect("/log_in")
+	pass
+
 
 """Delete Item"""
 
+@app.route("/delete_item")
+def delete_item():
+	user_id = session.get("user_id")
+	if not user_id: # redirects to log-in if no user ID session
+		return redirect("/log_in")
+	pass
+
+
+######################################################
+######################################################
+######### These are the Trade functions #########
+#####################################################
+#####################################################
+
+
 @app.route("/manage_trades")
 def manage_trades():
+	user_id = session.get("user_id")
+	if not user_id: # redirects to log-in if no user ID session
+		return redirect("/log_in")
 	pass
 
 
 @app.route("/find_partners")
 def find_partners():
+	user_id = session.get("user_id")
+	if not user_id: # redirects to log-in if no user ID session
+		return redirect("/log_in")
 	pass
 
 @app.route("/open_request")
 def open_request():
+	user_id = session.get("user_id")
+	if not user_id: # redirects to log-in if no user ID session
+		return redirect("/log_in")
 	pass
 
 
