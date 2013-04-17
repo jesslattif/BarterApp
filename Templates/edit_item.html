@@ -6,9 +6,9 @@
 
 
 
-Change {{ item.name }} to <form name ="edit name" action="{{url_for('update_item', id=item.id)}}" methods="POST">
-  	New name: <input type="text", name="name">
+Change {{ item.name }} to <form name ="edit name" action="{{url_for('update_item', id=item.id)}}" method="POST">
+  	new name: <input type="text", name="name">
   	<input type="submit" value="submit">
   </form></h3>
 </body>
-<html>
+</html>

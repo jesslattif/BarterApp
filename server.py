@@ -136,25 +136,40 @@ def edit_item(id):
 """Update edited item name"""
 
 @app.route("/update_item", methods=["POST"])
-def update_item(id):
+def update_item():
 	user_id = session.get("user_id")
 	if not user_id: # redirects to log-in if no user ID session
 		return redirect("/log_in")
 	user = db_session.query(User).get(user_id)
-	item = db_session.query(Item).get(id)
+	item = db_session.query(Item).get(request.args.get("id"))
 	name_string = str(request.form["name"]) # takes in updated item name as string
-	new_name = db_session.execute("UPDATE items SET name = ? WHERE id = ?" ("name_string", "item"))
-	return redirect("/manage_items.html")
+	item.name = name_string
+	db_session.commit()
+	return redirect("/manage_items")
 
 """Change Item Description"""
 
-@app.route("/edit_description", methods=["POST"])
-def edit_description():
+@app.route("/edit_description/<int:id>", methods=["Get"])
+def edit_description(id):
 	user_id = session.get("user_id")
 	if not user_id: # redirects to log-in if no user ID session
 		return redirect("/log_in")
-	pass
+	item = db_session.query(Item).get(id)
+	return render_template("/edit_description.html", item=item)
 
+"""Update Item Description"""
+
+@app.route("/update_description", methods=["POST"])
+def update_description():
+	user_id = session.get("user_id")
+	if not user_id: # redirects to log-in if no user ID session
+		return redirect("/log_in")
+	user = db_session.query(User).get(user_id) #gets user id
+	item = db_session.query(Item).get(request.args.get("id")) #gets item id
+	descr_string = str(request.form["description"]) #takes in new description as string
+	item.description = descr_string
+	db_session.commit()
+	return redirect("/manage_items")
 
 """Delete Item"""
 
