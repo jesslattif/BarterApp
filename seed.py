@@ -16,13 +16,16 @@ model.make_all()
 
 # 
 
-item = model.Item(name="Special Education Tutoring", description="Private tutoring sessions for your K-5 special needs child from a certified Special Education Teacher", user_id=3)
-session.add(item)
+# item = model.Item(name="Special Education Tutoring", description="Private tutoring sessions for your K-5 special needs child from a certified Special Education Teacher", user_id=3)
+# session.add(item)
 
-user = model.User(email="jon@jonlattif.com", password="jonathan", first_name="Jonathan", last_name="Lattif", zipcode="07670", biz_name="Lattif Photography", website="www.lattifphotography.com")
-session.add(user)
+# user = model.User(email="jon@jonlattif.com", password="jonathan", first_name="Jonathan", last_name="Lattif", zipcode="07670", biz_name="Lattif Photography", website="www.lattifphotography.com")
+# session.add(user)
 
-item = model.Item(name="Professional Photo Shoot", description="1, 2 or 3-hour photo shoot with a skilled professional photographer -- capture birthdays, family portraits, pet antics or other special occasions.", user_id=4)
+# item = model.Item(name="Professional Photo Shoot", description="1, 2 or 3-hour photo shoot with a skilled professional photographer -- capture birthdays, family portraits, pet antics or other special occasions.", user_id=4)
+# session.add(item)
+
+item = model.Item(name="Green Services", description="Everyone's favorite tasty greens served up the way you want.", user_id=4)
 session.add(item)
 
 

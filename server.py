@@ -98,6 +98,19 @@ def manage_items():
 	return render_template("manage_items.html", user_items =items, user=user)
 
 
+@app.route("/delete_item", methods=["POST"])
+def delete_item():
+	user_id = session.get("user_id")
+	if not user_id: # redirects to log-in if no user ID session
+		return redirect("/log_in")
+	user = db_session.query(User).get(user_id)
+	item = db_session.query(Item).get(request.args.get("id"))
+	db_session.delete(item)
+	db_session.commit()
+	return render_template("/item_deleted.html")
+
+
+
 """Add new item"""
 @app.route('/add_item')
 def add_item():
@@ -172,13 +185,6 @@ def update_description():
 	return redirect("/manage_items")
 
 """Delete Item"""
-
-@app.route("/delete_item")
-def delete_item():
-	user_id = session.get("user_id")
-	if not user_id: # redirects to log-in if no user ID session
-		return redirect("/log_in")
-	pass
 
 
 ######################################################
