@@ -25,9 +25,46 @@ model.make_all()
 # item = model.Item(name="Professional Photo Shoot", description="1, 2 or 3-hour photo shoot with a skilled professional photographer -- capture birthdays, family portraits, pet antics or other special occasions.", user_id=4)
 # session.add(item)
 
-item = model.Item(name="Green Services", description="Everyone's favorite tasty greens served up the way you want.", user_id=4)
-session.add(item)
+# cat_type = model.Cat_type(name="Goods")
+# session.add(cat_type)
 
+# cat_type = model.Cat_type(name="Services")
+# session.add(cat_type)
+
+# category = model.Category(cat_type=1, name="Art, Antiques & Collectibles")
+# session.add(category)
+
+# category = model.Category(cat_type=2, name="Accounting, Finance & Legal")
+# session.add(category)
+
+# category = model.Category(cat_type=2, name="Food & Nutrition")
+# session.add(category)
+
+# category = model.Category(cat_type=1, name="Media & Entertainment")
+# session.add(category)
+
+# category = model.Category(cat_type=2, name="Health, Fitness & Beauty")
+# session.add(category)
+
+# category = model.Category(cat_type=2, name="Software & Web Development")
+# session.add(category)
+
+# category = model.Category(cat_type=1, name="Electronics & Devices")
+# session.add(category)
+
+# category = model.Category(cat_type=2, name="Medical & Dental")
+# session.add(category)
+
+# category = model.Category(cat_type=2, name="Vehicle Maintenance & Repair")
+
+# category = model.Category(cat_type=1, name="Vehicle Parts")
+# session.add(category)
+
+# category = model.Category(cat_type=1, name="Clothing, Jewelry & Accessories")
+# session.add(category)
+
+category = model.Category(cat_type=1, name="Home & Garden")
+session.add(category)
 
 session.commit() # commit the change to the db
 

@@ -20,17 +20,17 @@ class User(Base): #all users who sign up
 	__tablename__ = 'users'
 
 	id = Column(Integer, primary_key=True)
-	email = Column(String(64))
-	password = Column(String(64))
-	first_name = Column(String(64))
-	last_name = Column(String(64))
-	zipcode = Column(String(16))
-	biz_name = Column(String(64))
-	website = Column(String(255))
-	image_url = Column(String(255), nullable=True)
-	opt_a = Column(String(255), nullable=True)
-	opt_b = Column(String(255), nullable=True)
-	opt_c = Column(String(255), nullable=True)
+	email = Column(String)
+	password = Column(String)
+	first_name = Column(String)
+	last_name = Column(String)
+	zipcode = Column(String)
+	biz_name = Column(String)
+	website = Column(String)
+	image_url = Column(String, nullable=True)
+	opt_a = Column(String, nullable=True)
+	opt_b = Column(String, nullable=True)
+	opt_c = Column(String, nullable=True)
 
 
 
@@ -38,11 +38,11 @@ class Item(Base): #specific items users list for trading
 	__tablename__ = 'items'
 
 	id = Column(Integer, primary_key=True)
-	name = Column(String(64))
-	description = Column(String(512))
-	image_url = Column(String(255), nullable=True)
+	name = Column(String)
+	description = Column(String)
+	image_url = Column(String, nullable=True)
 	user_id = Column(Integer, ForeignKey("users.id"))
-	cat_id = Column(Integer, ForeignKey("categories.id"), nullable=True)
+	cat_id = Column(Integer, ForeignKey("categories.id"))
 	user = relationship("User", backref=backref("items", order_by=id)) 
 	category = relationship("Category", backref=backref("items", order_by=id))
 
@@ -74,13 +74,13 @@ class Category(Base):
 
 	id = Column(Integer, primary_key=True)
 	cat_type = Column(Integer, ForeignKey("types.id")) #not sure how to do this -- if it's a good, it's not a service, and vice-versa, Integer is a placeholder for Boolean cuz don't know how to set this up
-	name = Column(String(64))
+	name = Column(String)
 	category = relationship("Cat_type", backref=backref("categories"))
 
 class Reviews(Base):
 	__tablename__ = 'reviews'
 	id = Column(Integer, primary_key=True)
-	review = Column(String(1024))
+	review = Column(String)
 	rating = Column(Integer)
 	trade_id = Column(Integer, ForeignKey("trades.id"))
 	trade = relationship("Trade", backref=backref("reviews"))
@@ -90,7 +90,7 @@ class Cat_type(Base):
 	__tablename__ = 'types'
 
 	id = Column(Integer, primary_key=True)
-	name = Column(String(64)) #0 = good 1 = service
+	name = Column(String) 
 
 
 

@@ -2,6 +2,8 @@
 	<body>
 		<h1>Welcome to your Barter Profile, {{ user_name }}!</h1>
 
+		<form name ="logout" action="{{url_for('log_out')}}" method="POST"><input type="submit" value="Log out"></form>
+			
 			<h2> Choose An Option: </h2>
 			<br>
 				<ul>
@@ -11,3 +13,4 @@
 					<a href="{{url_for('find_partners', id=user_id)}}">Find Barter Partners</a><br><br>
 					<a href="{{url_for('open_request', id=user_id)}}">Open a Trade Request</a><br><br>
 					<a href="{{url_for('manage_account', id=user_id)}}">Account Settings</a><br><br>
+

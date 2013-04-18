@@ -32,13 +32,19 @@ def sign_up():
 
 """Create a new user""" 
 
-@app.route("/", methods=["POST"])
+@app.route("/save_new_user", methods=["POST"])
 def save_new_user(): 
-	new_user = User(email=request.form["email"], password=request.form["password"], age=request.form["age"], zipcode=request.form["zipcode"])#new instance of class "User", fields filled in from web form
+	new_user = User(email=request.form["email"], 
+					password=request.form["password"], 
+					first_name=request.form["first_name"], 
+					last_name=request.form['last_name'], 
+					biz_name=request.form['biz_name'], 
+					website=request.form['website'], 
+					zipcode=request.form["zipcode"])#new instance of class "User", fields filled in from web form
 	db_session.add(new_user) #add & commit new user
 	db_session.commit()
-	user_email = new_user.email
-	return render_template("new_user.html", user_email=user_email)
+	session["user_id"] = user.id
+	return redirect(url_for('my_barter_profile'))
 
 
 """Log-in"""
@@ -54,29 +60,35 @@ def log_in():
 def authenticate(): # authenticate user
 	email = request.form['email']
 	password = request.form['password']
-	user = db_session.query(User).filter_by(email=email, password=password).first() #checks for user in db
+	user = db_session.query(User).filter_by(email=email, 
+											password=password).first() #checks for user in db
 
 	if not user: #redirect to log-in if info not correct
 		print "FAILED LOGIN"
-		return redirect("/log_in")
+		return redirect(url_for('index'))
+
 
 	print "SUCCEEDED" 
 	session["user_id"] = user.id #set session
-	return redirect("/my_barter_profile") #redirects to user's movie ratings page for unique user id
+	return redirect(url_for('my_barter_profile')) #redirects to user's movie ratings page for unique user id
 
 
 """Go to user's homepage"""
 
 @app.route("/my_barter_profile")
-def go_to_homepage():
+def my_barter_profile():
 	user_id = session.get("user_id") #gets user ID from current session
 	if not user_id: # redirects to log-in if no user ID session
-		return redirect("/log_in")
-	user = db_session.query(User).filter_by(id = user_id).first()
+		return redirect(url_for("index"))
+	user = db_session.query(User).get(id)
 	user_name = user.first_name
 
 	return render_template("my_barter_profile.html", user_name = user_name)
 
+@app.route("/log_out", methods=['POST'])
+def log_out():
+	session.pop("user_id", None)
+	return redirect("/")
 
 ######################################################
 ######################################################
@@ -91,18 +103,22 @@ def go_to_homepage():
 def manage_items():
 	user_id = session.get("user_id")
 	if not user_id: # redirects to log-in if no user ID session
-		return redirect("/log_in")
+		redirect(url_for("index"))
 
 	user = db_session.query(User).get(user_id) #gets user object based on user_id
 	items = user.items 
-	return render_template("manage_items.html", user_items =items, user=user)
+	return render_template("manage_items.html", 
+							user_items =items, 
+							user=user)
 
+
+"""Delete Item"""
 
 @app.route("/delete_item", methods=["POST"])
 def delete_item():
 	user_id = session.get("user_id")
 	if not user_id: # redirects to log-in if no user ID session
-		return redirect("/log_in")
+		return redirect(url_for("index"))
 	user = db_session.query(User).get(user_id)
 	item = db_session.query(Item).get(request.args.get("id"))
 	db_session.delete(item)
@@ -116,7 +132,7 @@ def delete_item():
 def add_item():
 	user_id = session.get("user_id")
 	if not user_id: # redirects to log-in if no user ID session
-		return redirect("/log_in")
+		return redirect(url_for("index"))
 	return render_template("add_item.html", user=user_id)
 
 
@@ -124,15 +140,17 @@ def add_item():
 def insert_item():
 	user_id = session.get("user_id")
 	if not user_id: # redirects to log-in if no user ID session
-		return redirect("/log_in")
+		return redirect(url_for("index"))
 	user = db_session.query(User).get(user_id)#gets user
 	name_string = str(request.form["name"]) #takes in new item name as a string
 	descr_string = str(request.form["description"]) #takes in new item description as a string 
+	category= request.form["category"]
+	# cat_type = 
 	new_name = Item(name=name_string, description=descr_string) #creates new item object from user's input
 	new_name.user = user #attach item object to user object
 	
 	db_session.commit()
-	return redirect("/manage_items")
+	return redirect(url_for('manage_items'))
 
 
 """Edit item name"""
@@ -141,7 +159,7 @@ def insert_item():
 def edit_item(id):
 	user_id = session.get("user_id")
 	if not user_id: # redirects to log-in if no user ID session
-		return redirect("/log_in")
+		return redirect(url_for("index"))
 	item = db_session.query(Item).get(id)
 	return render_template("/edit_item.html", item=item)
 
@@ -152,7 +170,7 @@ def edit_item(id):
 def update_item():
 	user_id = session.get("user_id")
 	if not user_id: # redirects to log-in if no user ID session
-		return redirect("/log_in")
+		return redirect(url_for("index"))
 	user = db_session.query(User).get(user_id)
 	item = db_session.query(Item).get(request.args.get("id"))
 	name_string = str(request.form["name"]) # takes in updated item name as string
@@ -166,7 +184,7 @@ def update_item():
 def edit_description(id):
 	user_id = session.get("user_id")
 	if not user_id: # redirects to log-in if no user ID session
-		return redirect("/log_in")
+		return redirect(url_for("index"))
 	item = db_session.query(Item).get(id)
 	return render_template("/edit_description.html", item=item)
 
@@ -176,15 +194,13 @@ def edit_description(id):
 def update_description():
 	user_id = session.get("user_id")
 	if not user_id: # redirects to log-in if no user ID session
-		return redirect("/log_in")
+		return redirect(url_for("index"))
 	user = db_session.query(User).get(user_id) #gets user id
 	item = db_session.query(Item).get(request.args.get("id")) #gets item id
 	descr_string = str(request.form["description"]) #takes in new description as string
 	item.description = descr_string
 	db_session.commit()
 	return redirect("/manage_items")
-
-"""Delete Item"""
 
 
 ######################################################
@@ -198,7 +214,7 @@ def update_description():
 def manage_trades():
 	user_id = session.get("user_id")
 	if not user_id: # redirects to log-in if no user ID session
-		return redirect("/log_in")
+		return redirect(url_for("index"))
 	pass
 
 
@@ -206,14 +222,14 @@ def manage_trades():
 def find_partners():
 	user_id = session.get("user_id")
 	if not user_id: # redirects to log-in if no user ID session
-		return redirect("/log_in")
+		return redirect(url_for("index"))
 	pass
 
 @app.route("/open_request")
 def open_request():
 	user_id = session.get("user_id")
 	if not user_id: # redirects to log-in if no user ID session
-		return redirect("/log_in")
+		return redirect(url_for("index"))
 	pass
 
 
