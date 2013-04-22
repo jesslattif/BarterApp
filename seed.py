@@ -15,6 +15,25 @@ model.make_all()
 # session.add(user) # add the user to sesion to pass it to the db
 
 # 
+# item = model.Item(
+# 				user_id=1,
+# 				name="Fish", 
+# 				description="fresh, local, sustainable seafood brought to you by Fair Share CSF", 
+# 				owned=True)
+# session.add(item)
+
+
+# item = model.Item(
+# 				user_id=2, 
+# 				name="Policy Analysis",
+# 				description="Sharp, thoughtful policy analysis by an exciting and accomplished analyst",
+# 				owned=True)
+# session.add(item)
+
+
+# 3,Fashion advice,"The most cutting-edge, fashion-forward style tips from renowned fashion writer Rachelle B.",3
+# 4,Tutoring,Home or library-based tutoring for your k-5 students by an accredited special education tutor,4
+# 5,Photography,1 hour photo shoot including two prints of your choice,5
 
 # item = model.Item(name="Special Education Tutoring", description="Private tutoring sessions for your K-5 special needs child from a certified Special Education Teacher", user_id=3)
 # session.add(item)
@@ -25,45 +44,51 @@ model.make_all()
 # item = model.Item(name="Professional Photo Shoot", description="1, 2 or 3-hour photo shoot with a skilled professional photographer -- capture birthdays, family portraits, pet antics or other special occasions.", user_id=4)
 # session.add(item)
 
-# cat_type = model.Cat_type(name="Goods")
-# session.add(cat_type)
+category = model.Category(
+	cat_type=1, name="Art, Antiques & Collectibles")
+session.add(category)
 
-# cat_type = model.Cat_type(name="Services")
-# session.add(cat_type)
+category = model.Category(
+	cat_type=2, name="Accounting, Finance & Legal")
+session.add(category)
 
-# category = model.Category(cat_type=1, name="Art, Antiques & Collectibles")
-# session.add(category)
+category = model.Category(
+	cat_type=2, name="Food & Nutrition")
+session.add(category)
 
-# category = model.Category(cat_type=2, name="Accounting, Finance & Legal")
-# session.add(category)
+category = model.Category(
+	cat_type=1, name="Media & Entertainment")
+session.add(category)
 
-# category = model.Category(cat_type=2, name="Food & Nutrition")
-# session.add(category)
+category = model.Category(
+	cat_type=2, name="Health, Fitness & Beauty")
+session.add(category)
 
-# category = model.Category(cat_type=1, name="Media & Entertainment")
-# session.add(category)
+category = model.Category(
+	cat_type=2, name="Software & Web Development")
+session.add(category)
 
-# category = model.Category(cat_type=2, name="Health, Fitness & Beauty")
-# session.add(category)
+category = model.Category(
+	cat_type=1, name="Electronics & Devices")
+session.add(category)
 
-# category = model.Category(cat_type=2, name="Software & Web Development")
-# session.add(category)
+category = model.Category(
+	cat_type=2, name="Medical & Dental")
+session.add(category)
 
-# category = model.Category(cat_type=1, name="Electronics & Devices")
-# session.add(category)
+category = model.Category(
+	cat_type=2, name="Vehicle Maintenance & Repair")
 
-# category = model.Category(cat_type=2, name="Medical & Dental")
-# session.add(category)
+category = model.Category(
+	cat_type=1, name="Vehicle Parts")
+session.add(category)
 
-# category = model.Category(cat_type=2, name="Vehicle Maintenance & Repair")
+category = model.Category(
+	cat_type=1, name="Clothing, Jewelry & Accessories")
+session.add(category)
 
-# category = model.Category(cat_type=1, name="Vehicle Parts")
-# session.add(category)
-
-# category = model.Category(cat_type=1, name="Clothing, Jewelry & Accessories")
-# session.add(category)
-
-category = model.Category(cat_type=1, name="Home & Garden")
+category = model.Category(
+	cat_type=1, name="Food & Beverage")
 session.add(category)
 
 session.commit() # commit the change to the db

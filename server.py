@@ -1,13 +1,14 @@
 
 from flask import Flask, render_template, redirect, request, session, url_for
 import model
-from model import User, Item, Participant, Trade, session as db_session
+from model import User, Item, Participant, Trade, Category, session as db_session
+import json
 
 app  = Flask(__name__)
 app.secret_key ="RZEB`YhM#EO|rhVWx~|U9,iYauiv l7B1t=ntDr7l-W&aM}JS2%"
 
 
-"""Index""" #this is the main page everyone sees when navigating to URL
+"""Index""" 
 
 @app.route("/")
 def index():
@@ -40,7 +41,7 @@ def save_new_user():
 					last_name=request.form['last_name'], 
 					biz_name=request.form['biz_name'], 
 					website=request.form['website'], 
-					zipcode=request.form["zipcode"])#new instance of class "User", fields filled in from web form
+					zipcode=request.form["zipcode"])
 	db_session.add(new_user) #add & commit new user
 	db_session.commit()
 	session["user_id"] = user.id
@@ -60,8 +61,8 @@ def log_in():
 def authenticate(): # authenticate user
 	email = request.form['email']
 	password = request.form['password']
-	user = db_session.query(User).filter_by(email=email, 
-											password=password).first() #checks for user in db
+	user = db_session.query(User).filter_by(
+		email=email, password=password).first() #checks for user in db
 
 	if not user: #redirect to log-in if info not correct
 		print "FAILED LOGIN"
@@ -70,7 +71,7 @@ def authenticate(): # authenticate user
 
 	print "SUCCEEDED" 
 	session["user_id"] = user.id #set session
-	return redirect(url_for('my_barter_profile')) #redirects to user's movie ratings page for unique user id
+	return redirect(url_for('my_barter_profile')) #redirects to user's page for unique user id
 
 
 """Go to user's homepage"""
@@ -80,10 +81,11 @@ def my_barter_profile():
 	user_id = session.get("user_id") #gets user ID from current session
 	if not user_id: # redirects to log-in if no user ID session
 		return redirect(url_for("index"))
-	user = db_session.query(User).get(id)
+	user = db_session.query(User).get(user_id)
 	user_name = user.first_name
 
-	return render_template("my_barter_profile.html", user_name = user_name)
+	return render_template(
+		"my_barter_profile.html", user_name = user_name)
 
 @app.route("/log_out", methods=['POST'])
 def log_out():
@@ -108,8 +110,7 @@ def manage_items():
 	user = db_session.query(User).get(user_id) #gets user object based on user_id
 	items = user.items 
 	return render_template("manage_items.html", 
-							user_items =items, 
-							user=user)
+							user_items =items, user=user)
 
 
 """Delete Item"""
@@ -133,7 +134,14 @@ def add_item():
 	user_id = session.get("user_id")
 	if not user_id: # redirects to log-in if no user ID session
 		return redirect(url_for("index"))
-	return render_template("add_item.html", user=user_id)
+	cats = db_session.query(Category).all()
+	cats_json = json.dumps([cat.json() for cat in cats]) 	#turns list into json
+	# Get all categories 
+	# Put all categories into a list
+	# Send list with template
+		
+	return render_template("add_item.html", 
+							user=user_id, cats=cats_json)
 
 
 @app.route("/insert_item", methods=["POST"])
@@ -144,9 +152,11 @@ def insert_item():
 	user = db_session.query(User).get(user_id)#gets user
 	name_string = str(request.form["name"]) #takes in new item name as a string
 	descr_string = str(request.form["description"]) #takes in new item description as a string 
-	category= request.form["category"]
-	# cat_type = 
-	new_name = Item(name=name_string, description=descr_string) #creates new item object from user's input
+	print ("HELLO HELLO HELLO WTF", request.form["category"])
+	cat_id= int(request.form["category"])
+	new_name = Item(
+		name=name_string, description=descr_string,
+		cat_id=cat_id) #creates new item object from user's input
 	new_name.user = user #attach item object to user object
 	
 	db_session.commit()
@@ -205,17 +215,9 @@ def update_description():
 
 ######################################################
 ######################################################
-######### These are the Trade functions #########
+######### These are the Search functions #########
 #####################################################
 #####################################################
-
-
-@app.route("/manage_trades")
-def manage_trades():
-	user_id = session.get("user_id")
-	if not user_id: # redirects to log-in if no user ID session
-		return redirect(url_for("index"))
-	pass
 
 
 @app.route("/find_partners")
@@ -233,10 +235,30 @@ def open_request():
 	pass
 
 
+######################################################
+######################################################
+######### These are the Trade functions #########
+#####################################################
+#####################################################
+
+
+
+@app.route("/manage_trades")
+def manage_trades():
+	user_id = session.get("user_id")
+	if not user_id: # redirects to log-in if no user ID session
+		return redirect(url_for("index"))
+	pass
+
+######################################################
+######################################################
+######### These are the Trade functions #########
+#####################################################
+#####################################################
+
 @app.route("/manage_account")
 def manage_account():
 	pass
-
 
 
 

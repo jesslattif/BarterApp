@@ -1,13 +1,17 @@
-# USing PostgreSQL which I don't know, so not sure how to format these. 
+# Using PostgreSQL which I don't know, so not sure how to format these. 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine, types 
 from sqlalchemy import Column, Integer, String, Date, Boolean
-from sqlalchemy.orm import sessionmaker, scoped_session #like sqlite3 cursor - describes how to interact with database, needs to be instantiated
+from sqlalchemy.orm import sessionmaker, scoped_session 	#Describes how to interact with database, needs to be instantiated.
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship, backref
+import json
 
-engine = create_engine("sqlite:///barters.db", echo=False) #creates engine that connects to db
-session = scoped_session(sessionmaker(bind=engine, autocommit = False, autoflush = False)) # set a variable that will be used by sessionmaker to help interact with ratings.db, now we don't need the "connect()" function
+engine = create_engine("sqlite:///barters.db", echo=False) 		#Creates engine that connects to db.
+session = scoped_session(sessionmaker(
+									bind=engine, 
+									autocommit = False, 
+									autoflush = False)) #Sets a variable that will be used by sessionmaker to help interact with ratings.db; no need for the "connect()" function.
 
 # the variable connecting to the declarative_base function of sqlalchemy - just do it!
 Base = declarative_base()
@@ -16,9 +20,9 @@ Base.query = session.query_property()
 def make_all():
 	Base.metadata.create_all(engine)
 
-class User(Base): #all users who sign up
+#All users who sign up
+class User(Base): 
 	__tablename__ = 'users'
-
 	id = Column(Integer, primary_key=True)
 	email = Column(String)
 	password = Column(String)
@@ -33,26 +37,30 @@ class User(Base): #all users who sign up
 	opt_c = Column(String, nullable=True)
 
 
-
-class Item(Base): #specific items users list for trading
+#All items users list for trading
+class Item(Base): 
 	__tablename__ = 'items'
 
 	id = Column(Integer, primary_key=True)
 	name = Column(String)
 	description = Column(String)
+	owned = Column(Boolean)
 	image_url = Column(String, nullable=True)
 	user_id = Column(Integer, ForeignKey("users.id"))
 	cat_id = Column(Integer, ForeignKey("categories.id"))
 	user = relationship("User", backref=backref("items", order_by=id)) 
 	category = relationship("Category", backref=backref("items", order_by=id))
+	
 
-class Trade(Base): #transactions between participants(users)
+#Transactions between participants(users)
+class Trade(Base): 
 	__tablename__ = 'trades'
 
 	id = Column(Integer, primary_key=True)
 	open_date = Column(Date) #timestamp?
 	transaction_date = Column(Date)
 	close_date = Column(Date)
+
 
 class Participant(Base): #participants in specific trades
 	__tablename__ = 'participants'
@@ -61,9 +69,9 @@ class Participant(Base): #participants in specific trades
 	user_id = Column(Integer, ForeignKey("users.id"))
 	item_id = Column(Integer, ForeignKey("items.id"))
 	trade_id = Column(Integer, ForeignKey("trades.id"))
-	total_qty = Column(Integer) #should use "smallint"?
+	total_qty = Column(Integer) 
 	current_qty = Column(Integer, nullable=True)
-	confirm = Column(Boolean)#Integer is a placeholder for Boolean cuz don't know how to set this up
+	confirm = Column(Boolean)
 	user = relationship("User", backref=backref("participants"))
 	item = relationship("Item", backref=backref("participants"))
 	trade = relationship("Trade", backref=backref("participants"))
@@ -73,29 +81,25 @@ class Category(Base):
 	__tablename__ = 'categories'
 
 	id = Column(Integer, primary_key=True)
-	cat_type = Column(Integer, ForeignKey("types.id")) #not sure how to do this -- if it's a good, it's not a service, and vice-versa, Integer is a placeholder for Boolean cuz don't know how to set this up
-	name = Column(String)
-	category = relationship("Cat_type", backref=backref("categories"))
+	name = Column(String)				#category of item listed
+	cat_type = Column(Integer) 			#goods or services
+	
+	def json(self):
+		return dict(
+			name=self.name,
+			cat_type=self.cat_type,
+			id=self.id
+			)
+
 
 class Reviews(Base):
 	__tablename__ = 'reviews'
+
 	id = Column(Integer, primary_key=True)
 	review = Column(String)
 	rating = Column(Integer)
 	trade_id = Column(Integer, ForeignKey("trades.id"))
 	trade = relationship("Trade", backref=backref("reviews"))
-
-
-class Cat_type(Base):
-	__tablename__ = 'types'
-
-	id = Column(Integer, primary_key=True)
-	name = Column(String) 
-
-
-
-
-
 
 
 
