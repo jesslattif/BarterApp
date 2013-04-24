@@ -1,0 +1,15 @@
+<html>
+	<body>
+		<h1>Welcome to Barter Professional, {{ user_name }}!</h1>
+
+		<form name ="logout" action="{{url_for('log_out')}}" method="POST"><input type="submit" value="Log out"></form>
+			
+			<h2> Choose An Option: </h2>
+			<br>
+				<ul>
+					<a href="{{url_for('view_categories', id=user_id)}}"> Search for Stuff to Trade</a><br><br>
+					<a href="/{{url_for('user_list', id=user_id)}}">Search By User</a>
+					<br><br>
+					<a href="{{url_for('my_barter_profile', id=user_id)}}">Manage my Profile</a><br><br>
+					
+

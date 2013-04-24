@@ -1,0 +1,15 @@
+<html>
+	<body>
+		<h1>All items in {{ cat.name }}</h1>
+
+	
+			
+			<h2> {% for item in items %} </h2>
+			<br>
+				<ul>
+					<a href="{{url_for('display_users', )}}"> {{ item.name }}</a><br>
+
+				{% endfor %}
+					
+
+<form name ="logout" action="{{url_for('log_out')}}" method="POST"><input type="submit" value="Log out"></form>

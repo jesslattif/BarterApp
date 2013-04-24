@@ -71,10 +71,21 @@ def authenticate(): # authenticate user
 
 	print "SUCCEEDED" 
 	session["user_id"] = user.id #set session
-	return redirect(url_for('my_barter_profile')) #redirects to user's page for unique user id
+	return redirect(url_for('home')) #redirects to user's page for unique user id
 
 
 """Go to user's homepage"""
+
+@app.route("/home")
+def home():
+	user_id = session.get("user_id") #gets user ID from current session
+	if not user_id: # redirects to log-in if no user ID session
+		return redirect(url_for("index"))
+
+	user = db_session.query(User).get(user_id)
+	user_name = user.first_name
+
+	return render_template("home.html", user_name=user_name)
 
 @app.route("/my_barter_profile")
 def my_barter_profile():
@@ -147,13 +158,12 @@ def add_item():
 @app.route("/insert_item", methods=["POST"])
 def insert_item():
 	user_id = session.get("user_id")
-	if not user_id: # redirects to log-in if no user ID session
+	if not user_id: # redirect to log-in if no user ID session
 		return redirect(url_for("index"))
-	user = db_session.query(User).get(user_id)#gets user
-	name_string = str(request.form["name"]) #takes in new item name as a string
-	descr_string = str(request.form["description"]) #takes in new item description as a string 
-	print ("HELLO HELLO HELLO WTF", request.form["category"])
-	cat_id= int(request.form["category"])
+	user = db_session.query(User).get(user_id)#get user
+	name_string = str(request.form["name"]) #take in new item name as a string
+	descr_string = str(request.form["description"]) #take in new item description as a string 
+	cat_id= int(request.form["category"]) #take in cat id as integer
 	new_name = Item(
 		name=name_string, description=descr_string,
 		cat_id=cat_id) #creates new item object from user's input
@@ -219,13 +229,62 @@ def update_description():
 #####################################################
 #####################################################
 
+"""View All Categories"""
 
-@app.route("/find_partners")
-def find_partners():
+@app.route("/view_categories", methods=["GET"])
+def view_categories():
+	user_id = session.get("user_id")
+	if not user_id: # redirects to log-in if no user ID session
+		return redirect(url_for("index"))
+	# get all categories of type "goods"
+	goods = db_session.query(Category).filter_by(cat_type=1).all()
+	#get all categories of type "services"
+	services = db_session.query(Category).filter_by(cat_type=2).all()
+	return render_template("view_categories.html",
+							goods=goods, services=services)
+
+
+"""View all items in a Category"""
+
+@app.route("/display_items/<int:cat_id>", methods=["GET"])
+def display_items(cat_id):
+	user_id = session.get("user_id")
+	if not user_id: # redirects to log-in if no user ID session
+		return redirect(url_for("index"))
+	#get all items for a category by cat_id
+	items = db_session.query(Item).filter_by(cat_id=cat_id).all()
+	cat = db_session.query(Category).filter_by(id=cat_id).one()
+	return render_template("display_items.html", items=items, cat=cat)
+	pass
+
+""" Click on an item to see users who've posted them """
+
+@app.route("/display_users/", methods=["GET"])
+def display_users(item_id):
+	user_id = session.get("user_id")
+	if not user_id: # redirects to log-in if no user ID session
+		return redirect(url_for("index"))
+	#get all users who have listed a particular item
+	users = db_session.query(User).filter_by(item_id=item_id).all()
+	return render_template("display_users.html", users=users)
+	pass
+
+"""See All Users & their items"""
+@app.route("/user_list")
+def user_list():
 	user_id = session.get("user_id")
 	if not user_id: # redirects to log-in if no user ID session
 		return redirect(url_for("index"))
 	pass
+
+
+@app.route("/find_people")
+def find_people():
+	user_id = session.get("user_id")
+	if not user_id: # redirects to log-in if no user ID session
+		return redirect(url_for("index"))
+	pass
+
 
 @app.route("/open_request")
 def open_request():

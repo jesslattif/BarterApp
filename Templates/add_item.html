@@ -29,25 +29,22 @@ typeSelect.addEventListener("change", function() {
 	// iterator for all cats in categories
 	for (var i = 0; i < categories.length; i++) {
 		//match cats drop-down to whichever cat type is selected:
+		j = typeSelect.selectedIndex;  // what option is selected
+		o = typeSelect.options[j];
+		o.value;
+
+
 		if (categories[i].cat_type == typeSelect.options[typeSelect.selectedIndex].value) {
 		// create an element: option tag "option"
-		var option = document.createElement("option");
+			var option = document.createElement("option");
 		// set the value inside the option tag to the name of each cat
-		option.innerHTML = categories[i].name
+			option.innerHTML = categories[i].name
 		//set the option value = cat id
-		option.value = categories[i].id
+			option.value = categories[i].id
 		// append the whole option to the catSelect element		
-		catSelect.appendChild(option);
+			catSelect.appendChild(option);
 	} }
 
-
-//<option value="id", innerHTML = "categories.name">	
-	//set inner html property of cats to a blank string
-	//make an option tag, then set its value to be 
-	//the id of the tag, inner html = name of cat
-	//append option tag to the cats select using .appendChild
-	//developer.mozilla.org
-	//check out teachingmaterials.org/javascript - DOM exercises
 }, true);
 
  </script>

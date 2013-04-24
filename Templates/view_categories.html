@@ -1,0 +1,34 @@
+<html>
+<body>
+ <h1>Search Items</h1>
+ 	<h3> Click on any category to view items available for trade</h3>
+
+
+ 	<table>
+		<tr>
+			<td><strong>Goods</strong></td></tr>
+			
+ 		{% for good in goods %}
+ 		<tr>
+ 			<td><a href="{{url_for('display_items', cat_id=good.id)}}">{{ good.name }}</a></td> 
+ 		</tr>
+ 		{% endfor %}</table>
+ 		<br><br><br>
+
+ 		<table>
+ 		<tr>
+ 			<td><strong>Services</strong></td>
+ 		</tr>
+
+ 		{% for service in services %}
+ 		 	<tr>
+ 		 		<td><a href="{{url_for('display_items', cat_id=service.id)}}">{{ service.name }}</a></td>
+ 		 	</tr>
+ 		 		{% endfor %}
+ 		 </table>
+<br><br><br>
+
+	<form name ="logout" action="{{url_for('log_out')}}" method="POST"><input type="submit" value="Log out"></form>
+
+</body>
+</html>
