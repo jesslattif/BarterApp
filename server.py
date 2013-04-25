@@ -243,6 +243,34 @@ def view_categories():
 	return render_template("view_categories.html",
 							goods=goods, services=services)
 
+""" Search for Items in all Categories"""
+@app.route("/search_all_cats", methods=["GET"])
+def search_all_cats():
+	user_id = session.get("user_id")
+	if not user_id: # redirects to log-in if no user ID session
+		return redirect(url_for("index"))
+	# get search term from request args	
+	search_term = request.args.get("search_term", '')
+	if search_term == '':
+		return render_template("search.html")
+	# get items with name matching search term
+	items = db_session.query(Item).filter(Item.name.like(
+		"%" + search_term + "%")).all()
+	cats = []
+	users = []
+	for item in items:
+		#get categories for item matching search term
+		cat = db_session.query(Category).filter_by(id=item.cat_id).one()
+		cats.append(cat)
+		#get user for each item
+		user = db_session.query(User).filter_by(id=item.user_id).one()
+		users.append(user)
+	
+	return render_template("search_results.html",
+							items=items,
+							search_term=search_term, 
+							cats=cats, users=users)
+
 
 """View all items in a Category"""
 
@@ -253,6 +281,7 @@ def display_items(cat_id):
 		return redirect(url_for("index"))
 	#get all items for a category by cat_id
 	items = db_session.query(Item).filter_by(cat_id=cat_id).all()
+	# get category to display its name
 	cat = db_session.query(Category).filter_by(id=cat_id).one()
 	return render_template("display_items.html", items=items, cat=cat)
 	pass
@@ -266,7 +295,9 @@ def display_users(item_id):
 		return redirect(url_for("index"))
 	#get all users who have listed a particular item
 	users = db_session.query(User).filter_by(item_id=item_id).all()
-	return render_template("display_users.html", users=users)
+	# get item to displat its name
+	item = db_session.query(Item).filter_by(id=cat_id).one()
+	return render_template("display_users.html", users=users, item=item)
 	pass
 
 """See All Users & their items"""

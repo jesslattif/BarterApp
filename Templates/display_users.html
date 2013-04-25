@@ -1,13 +1,13 @@
 <html>
 	<body>
-		<h1>All items in {{ cat.name }}</h1>
+		<h1>Who has {{ item.name }}?</h1>
 
 	
 			
-			<h2> {% for item in items %} </h2>
+			<h2> {% for user in users %} </h2>
 			<br>
 				<ul>
-					{{ item.name }}<br>
+					<a href="{{url_for('display_users', )}}"> {{ item.name }}</a><br>
 
 				{% endfor %}
 					
