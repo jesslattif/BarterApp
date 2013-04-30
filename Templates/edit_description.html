@@ -1,15 +1,23 @@
-<html>
-<h1>Edit {{item.name}} Description</h1>
-<h2>
- <br>
- <br> 
- <br><h4>Current Description:</h4> 
- 	<p>{{ item.description }}</p>
+{% extends "layout.html" %}
+{% block body %}
+<div class="container">
 
-
-	<form name ="edit name" action="{{url_for('update_description', id=item.id)}}" method="POST">
-  	New Description: <input type="text", name="description">
-  	<input type="submit" value="submit">
-  </form></h3>
-</body>
-</html>
+	<h1>
+		Edit {{item.name}} Description
+	</h1>
+ 		<br>
+ 		<br> 
+ 		<br>
+ 			<h4>
+ 				Current Description:
+ 			</h4> 
+ 				<p>
+ 					{{ item.description }}
+ 				</p>
+					<form name ="edit name" action="{{url_for('update_description', id=item.id)}}" method="POST">
+  						New Description: 
+  							<input type="text", name="description">
+  							<input type="submit" class="btn" value="submit">
+  					</form>
+</div>
+{% endblock %}

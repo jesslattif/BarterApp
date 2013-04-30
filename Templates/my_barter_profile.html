@@ -1,14 +1,22 @@
-<html>
-	<body>
+{% extends "layout.html" %}
+{% block body %}
+<div class="container">
 		<h1>{{ user_name }}'s Barter Profile</h1>
 
-		<form name ="logout" action="{{url_for('log_out')}}" method="POST"><input type="submit" value="Log out"></form>
 			
 			<h2> Choose An Option: </h2>
 			<br>
 				<ul>
-					<a href="{{url_for('manage_items', id=user_id)}}"> Manage My Items</a><br><br>
-					<a href="/{{url_for('manage_trades', id=user_id)}}">Manage My Trades</a>
-					<br><br>
-					<a href="{{url_for('manage_account', id=user_id)}}">Account Settings</a><br><br>
-
+					<a href="{{url_for('manage_items', id=user_id)}}"> 
+						Manage My Items
+					</a>
+						<br>
+						<br>
+					<a href="/{{url_for('manage_trades', id=user_id)}}">		Manage My Trades
+					</a>
+						<br>
+						<br>
+					<a href="{{url_for('manage_account', id=user_id)}}">		Account Settings
+					</a>
+</div>
+{% endblock %}

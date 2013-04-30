@@ -1,14 +1,18 @@
-<html>
-<h1>Edit {{item.name}} </h1>
-<h2>
- <br>
- <br> 
+{% extends "layout.html" %}
+{% block body %}
+<div class="container">
+	<h1>
+		Edit {{item.name}} 
+	</h1>
+		<h2>
+ 			<br>
+ 			<br>
+ 			Change "{{ item.name }}" to 
+ 				<form name ="edit name" action="{{url_for('update_item', id=item.id)}}" method="POST">
+  					<input type="text", name="name">
+  					<input type="submit" class="btn" value="submit">
+ 				</form>
+ 		</h2>
 
-
-
-Change {{ item.name }} to <form name ="edit name" action="{{url_for('update_item', id=item.id)}}" method="POST">
-  	new name: <input type="text", name="name">
-  	<input type="submit" value="submit">
-  </form></h3>
-</body>
-</html>
+</div>
+{% endblock %}

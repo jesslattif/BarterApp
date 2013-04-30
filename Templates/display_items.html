@@ -1,15 +1,63 @@
-<html>
-	<body>
-		<h1>All items in {{ cat.name }}</h1>
+{% extends "layout.html" %}
+{% block body %}
+<div class="container">
 
-	
-			
-			<h2> {% for item in items %} </h2>
-			<br>
-				<ul>
-					{{ item.name }}<br>
+		<h1>{{ title }}"{{ search_term }}"</h1>
 
-				{% endfor %}
-					
-<br><br><br>
-<form name ="logout" action="{{url_for('log_out')}}" method="POST"><input type="submit" value="Log out"></form>
+		<table>
+		<tr>
+			<td>
+				<strong>
+					Name
+				</strong>
+			</td>
+			<td>
+				<strong>
+					Description
+				</strong>
+			</td>
+			{% if title=="All items matching " %}
+			<td>
+				<strong>
+					Category
+				</strong>
+			</td>
+			{% endif %}
+			<td>
+				<strong>
+					User
+				</strong>
+			</td>
+			<td>
+			</td>
+		</tr>
+		{% for item in items %}
+			<tr>	
+				<td>
+					{{ item.name }}
+				</td>
+				<td>
+					{{ item.description }}
+				</td>
+				{% if title=="All items matching " %}
+				<td>
+					{{ item.category.name }}
+				</td>
+				{% endif %}
+
+				<td>
+					<a href="/display_user/{{ item.user.id }}">
+					{{ item.user.first_name }} 
+					{{ item.user.last_name }}
+				</td> 
+				<td>
+					<a href="/open_request?item={{ item.id }}" class = "btn">
+					Trade
+					</a>
+				</td>
+			</tr>
+		{% endfor %}
+
+	</table>
+
+{% endblock %}

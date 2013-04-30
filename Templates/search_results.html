@@ -1,24 +1,45 @@
-<html>
+{% extends "layout.html" %}
 {% block body %}
+<div class="container">
 
 <h1>All items matching "{{ search_term }}" </h1>
 	<table>
 		<tr>
-			<td><strong>Item</strong></td>
-			<td><strong>Description</strong></td>
-			<td><strong>Category</strong></td>
-			<td><strong>User</strong></td>
+			<td>
+				<strong>
+					Item
+				</strong>
+			</td>
+			<td>
+				<strong>
+					Description
+				</strong>
+			</td>
+		
+			<td>
+				<strong>
+					User
+				</strong>
+			</td>
 		</tr>
-		{% set count = 0 %}
 		{% for item in items %}
-		<tr>	
-			<td>{{ item.name }}</td>
-			<td>{{ item.description }}</td>
-			<td>{{ cats[count].name }}</td>
-			<td>{{ users[count].first_name }} {{ users[count].last_name }}</td> {% set count = count + 1 %}
-		</tr>
+			<tr>	
+				<td>
+					{{ item.name }}
+				</td>
+				<td>
+					{{ item.description }}
+				</td>
+				<td>
+					{{ item.category.name }}
+				</td>
+				<td>
+					{{ item.user.first_name }} 
+					{{ item.user.last_name }}
+				</td> 
+			</tr>
 		{% endfor %}
 
 	</table>
+</div>
 {% endblock %}
-</html>

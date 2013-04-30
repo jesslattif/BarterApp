@@ -58,8 +58,8 @@ class Trade(Base):
 
 	id = Column(Integer, primary_key=True)
 	open_date = Column(Date) #timestamp?
-	transaction_date = Column(Date)
-	close_date = Column(Date)
+	transaction_date = Column(Date, nullable=True)
+	close_date = Column(Date, nullable=True)
 
 
 class Participant(Base): #participants in specific trades

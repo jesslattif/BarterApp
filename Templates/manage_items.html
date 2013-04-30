@@ -1,32 +1,59 @@
-<html>
-<body>
+{% extends "layout.html" %}
+{% block body %}
+<div class="container">
  <h1>My Items</h1>
- 	<h3> Click on any item name or description to edit or delete.</h3>
-
-
- 	<table>
-		<tr>
-			<td><strong>Name</strong></td>
-			<td><strong>Description</strong></td>
-			<td><strong>Category</strong></td>
+ 	<h3> Click on any item name or description to edit it</h3>
+ 		<table>
+			<tr>
+				<td>
+					<strong>
+						Name
+					</strong>
+				</td>
+				<td>
+					<strong>
+						Description
+					</strong>
+				</td>
+				<td>
+					<strong>
+						Category
+					</strong>
+				</td>
 		</tr>
 
  		{% for item in user_items %}	
  		<tr>
- 			<td><a href="{{url_for('edit_item', id=item.id)}}">{{ item.name }}</a></td>
- 			<td><a href="{{ url_for('edit_description', id=item.id) }}">{{ item.description }}</a></td>
- 			<td>{{ item.category.name}}
- 			<td><form name ="delete_item" action="{{url_for('delete_item', id=item.id)}}" method="POST">
-  			<input type="submit" value="delete"></form></td>
+ 			<td>
+ 				<a href="{{url_for('edit_item', id=item.id)}}">
+ 					{{ item.name }}
+ 				</a>
+ 			</td>
+ 			<td>
+ 				<a href="{{ url_for('edit_description', id=item.id) }}">
+ 					{{ item.description }}
+ 				</a>
+ 			</td>
+ 			<td>
+ 				{{ item.category.name}}
+ 			<td>
+ 				<form name ="delete_item" action="{{url_for('delete_item', id=item.id)}}" method="POST">
+  					<button type="submit" value="delete" class="btn">
+  						Delete
+  					</btn>
+  				</form>
+  			</td>
  		</tr>
  		
  		{% endfor %}
 
  	</table>
 
-	<h2><a href="{{ url_for('add_item') }}">Click here to add items</a></h2>
+	<h2>
+		<a href="{{ url_for('add_item') }}">
+			Click here to add items
+		</a>
+	</h2>
 
-	<form name ="logout" action="{{url_for('log_out')}}" method="POST"><input type="submit" value="Log out"></form>
-
-</body>
-</html>
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container">
+	<h1>New Trade
+
+	<h2><form action="/open_request" method="POST">
+		<input type="hidden" name="item_id" value="{{ item.id }}">
+		<div>
+			{{ item.name }} 
+			<br>
+			with {{ item.user.first_name }} {{ item.user.last_name }}
+			<br>
+		</div>
+		<label for="B_total_qty">
+			How many hours/items/etc. do you want?
+		<input type="number" name="B_total_qty" id="B_total_qty">
+		</label>
+		<label for="A_item_id">
+			Which of your items do you want to trade?
+		</label>
+		<select name="A_item_id">
+			{% for item in g.user.items %}
+			<option value="{{ item.id }}">
+				{{ item.name }}
+			</option>
+			{% endfor %}
+		</select>	
+		<label for="A_total_qty">
+			How many hours/items/etc. will you offer?
+		<input type="number" name="A_total_qty" id="A_total_qty">
+		</label>
+		</select>
+		<input type="submit" class="btn" value="Submit">
+	
+		</form>
+
+
+
+</div>
+{% endblock %}

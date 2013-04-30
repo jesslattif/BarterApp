@@ -1,5 +1,7 @@
-<html>
-  <body>
+{% extends "layout.html" %}
+{% block body %}
+<div class="container">
+
   	<h1> Add New Barter Item</h1>
 
   	<form name ="insert item" action="{{url_for('insert_item', id=user)}}" method="POST">
@@ -12,7 +14,7 @@
   	</select>
   	<select name="category" id="cats">
   	</select>
-  	<input type="submit" value="submit">
+  	<input type="submit" class="btn" value="submit">
   </form>
  <script> 
  // pipe "cats" from server to the page - safe means the thing is "safe" to put on the page, no escaping/url needed
@@ -48,5 +50,5 @@ typeSelect.addEventListener("change", function() {
 }, true);
 
  </script>
- </body>
-</html>
+</div>
+{% endblock %}

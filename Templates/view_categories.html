@@ -1,42 +1,64 @@
-<html>
-<body>
- <h1>Search for items by name:</h1>
-			 <h3>
-			 	<form method ="GET" action ="/search_all_cats">
-			 	What are you looking for?<input type ="text" name="search_term">
-			 	<input type="submit" value="search">
-			    </form>
-			 </h3>
-			 <br>
-			 <br>
-			 <br>
-	<h1>Search for items by category:</h1>
-
+{% extends "layout.html" %}
+{% block body %}
+<div class="container">
+	 
+ <h1>
+ 	Search for items by name:
+ </h1>
+	<h3>
+		<form method ="GET" action ="/search_all_cats">
+			What are you looking for?
+			<input type ="text" name="search_term">
+			 <button type ="submit" value="search" class="btn">
+			 	search
+			 </button>
+		</form>
+	</h3>
+	 <br>
+	 <br>
+	 <br>
+	<h1>
+		Search for items by category:
+	</h1>
  	<table>
 		<tr>
-			<td><strong>Goods</strong></td></tr>
+			<td>
+				<strong>
+					Goods
+				</strong>
+			</td>
+		</tr>
 			
  		{% for good in goods %}
  		<tr>
- 			<td><a href="{{url_for('display_items', cat_id=good.id)}}">{{ good.name }}</a></td> 
+ 			<td>
+ 				<a href="{{url_for('display_items', cat_id=good.id)}}">
+ 					{{ good.name }}
+ 				</a>
+ 			</td> 
  		</tr>
- 		{% endfor %}</table>
- 		<br><br><br>
-
- 		<table>
+ 			{% endfor %}
+ 	</table>
+ 	<br>
+ 	<br>
+ 	<br>
+	<table>
  		<tr>
- 			<td><strong>Services</strong></td>
+ 			<td>
+ 				<strong>
+ 					Services
+ 				</strong>
+ 			</td>
  		</tr>
-
- 		{% for service in services %}
+			{% for service in services %}
  		 	<tr>
- 		 		<td><a href="{{url_for('display_items', cat_id=service.id)}}">{{ service.name }}</a></td>
+ 		 		<td>
+ 		 			<a href="{{url_for('display_items', cat_id=service.id)}}">	{{ service.name }}
+ 		 			</a>
+ 		 		</td>
  		 	</tr>
  		 		{% endfor %}
  		 </table>
-<br><br><br>
-
-	<form name ="logout" action="{{url_for('log_out')}}" method="POST"><input type="submit" value="Log out"></form>
-
-</body>
-</html>
+		<br><br><br>
+</div>
+	{% endblock %}
