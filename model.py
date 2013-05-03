@@ -72,7 +72,7 @@ class Participant(Base): #participants in specific trades
 	trade_id = Column(Integer, ForeignKey("trades.id"))
 	total_qty = Column(Integer) 
 	current_qty = Column(Integer, nullable=True)
-	confirm = Column(Boolean)
+	confirm = Column(Boolean, nullable=True)
 	requester = Column(Boolean)
 	user = relationship("User", backref=backref("participants"))
 	item = relationship("Item", backref=backref("participants"))

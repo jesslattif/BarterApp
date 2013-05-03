@@ -1,9 +1,41 @@
 {% extends "layout.html" %}
 {% block body %}
 <div class="container wrapper">
-		<h1>User Info for {{ user.first_name }} {{ user.last_name }}</h1>
+		<h1>Info for {{ user.biz_name }}</h1>
+		<h2>Member Name: {{ user.first_name }} {{ user.last_name }}</h2> 
+		<br>
+				<table>
+					<td>
+					<strong>
+						Item
+					</strong>
+				</td>
+				<td>
+					<strong>
+						Description
+					</strong>
+				</td>
+				<td>
+					<strong>
+						Category
+					</strong>
+				</td>
+				</h3>
+					{% for item in user.items %}
+					<tr>	
+					<td>
+						{{ item.name }}
+					</td>
+					<td>
+						{{ item.description }}
+					</td>
+					<td>
+						{{ item.category.name }}
+					</td>
+					{% endfor %}
+				</table>
 
-
+				
 	
 </div>
 {% endblock %}

@@ -47,16 +47,14 @@
               <li><a href="/my_account">{{ g.user.first_name }}'s Account </a>
               </li>
               {% endif %}
-                  <li><a href="/view_categories">Find Stuff</a></li>
-                  <li><a href="/find_business">Find People</a></li>
-                  <li><a href="/manage_trades">Manage Trades</a></li>
+                  <li><a href="/view_categories">Search</a></li>
             </ul>
 
             {% if not g.user %}
             <form name="login" action="/authenticate" method="POST" class="navbar-form pull-right">
               <input class="span2" type="text" name="email" placeholder="Email">
               <input class="span2" type="password" name="password" placeholder="Password">
-              <button type ="submit" value="sign in" class="btn" >Sign in
+              <button type ="submit" value="sign in" class="btn" >Sign in</button>
             </form>
             {% else %}
               <div>
@@ -65,7 +63,7 @@
                 </a>
               </div>
             {% endif %}
-          </div><!--/.nav-collapse -->
+          </div>
         </div>
       </div>
     </div>
@@ -76,35 +74,56 @@
         {% endfor %}
       {% endif %}
     {% endwith %}
-      </div>
+ 
 
  
 
   {% if g.notifications %}
-    <div class="alert alert-info">
-      {% for note in g.notifications %}
-        <p><strong> 
-           {{ note.trade.participants[0].user.first_name }} wants to trade {{ note.trade.participants[0].item.name }} for {{ note.trade.participants[1].item.name }}             
-        <a href="/accept_trade.html" class="btn btn-mini btn-info">
-            Accept Trade</a>
-        <a href="/refuse_trade.html" class="btn btn-mini btn-error">
-            Refuse Trade</a>
-            </p></strong>
-    </div> <!-- this closes alert div -->
+    {% for note in g.notifications %}
+      <div class="alert alert-info">
+        <p>
+          <strong> 
+           {{ note.trade.participants[0].user.biz_name }} wants to trade {{ note.trade.participants[0].item.name }} for {{ note.trade.participants[1].item.name }}             
+              <a href="/accept_trade/{{ note.trade.participants[1].id }}" class="btn btn-mini btn-info">
+                Accept Trade
+              </a>
+              <a href="/refuse_trade.html" class="btn btn-mini btn-error">
+                Refuse Trade
+              </a>
+          </strong>
+        </p>
+      </div> 
+  {% endfor %}
+{% endif %}
+
+{% if g.new_confirms %}
+    {% for confirm in g.new_confirms %}
+      <div class="alert alert-info">
+        <p>
+          <strong> <!-- participants[1] is the other party, participants[0] is self -->
+           {{ confirm.trade.participants[1].user.biz_name }} confirmed trading {{ confirm.trade.participants[0].item.name }} for {{ confirm.trade.participants[1].item.name }}! 
+           <br>
+           <a href="mailto:{{ confirm.trade.participants[1].user.email }}">
+           Email them to work out details:      
+              {{ confirm.trade.participants[1].user.email }}
+            </a>
+               
+              </a>
+             
+           </strong> 
+         </p>
+      </div>
   {% endfor %}
 {% endif %}
 
 
     {% block body %}
-    <p>
-    </p>
     {% endblock %}
 
       <footer>
         <p>&copy; Barter Pro 2013</p>
       </footer>
 
-    </div> <!-- /container -->
 
     <!-- Le javascript
     ================================================== -->

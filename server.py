@@ -19,7 +19,8 @@ def before_request():
 		g.user = None
 	else:
 		g.user = db_session.query(User).get(g.user_id)
-		g.notifications = get_notifications()
+		g.notifications, g.new_confirms = get_notifications()
+		print "***************", g.notifications
 
 
 
@@ -227,6 +228,7 @@ def view_categories():
 							goods=goods, services=services)
 
 """ Search for Items in all Categories"""
+
 @app.route("/search_all_cats", methods=["GET"])
 def search_all_cats():
 	# get search term from request args	
@@ -275,10 +277,22 @@ def display_user(id):
 def user_list():
 	pass
 
-
-@app.route("/find_business")
+""" Find businesses  """
+@app.route("/find_business", methods=["GET"])
 def find_business():
-	pass
+	search_term = request.args.get("search_term", '')
+	if search_term == '':
+		flash("Please enter a valid search term", "error")
+		return redirect(url_for("view_categories"))
+	# get businesses (users) with names matching search term:
+	bizs = db_session.query(User).filter(User.biz_name.like(
+		"%" + search_term + "%")).filter(Item.user_id != g.user.id).all()
+	if not bizs:
+		flash("Sorry, nothing matched your search.", "error")
+		return redirect(url_for("view_categories"))
+	else: 
+		return render_template(
+		"display_items.html", bizs=bizs, search_term=search_term, title="All Businesses Matching ", items=None)
 
 
 
@@ -312,8 +326,7 @@ def open_request():
 			item_id=int(request.form["A_item_id"]),
 			trade_id=new_trade.id,
 			total_qty=int(request.form["A_total_qty"]),
-			current_qty=0,
-			confirm=False, 
+			current_qty=0, 
 			requester=True	
 			)
 		db_session.add(new_participant_a)
@@ -327,13 +340,12 @@ def open_request():
 			trade_id=new_trade.id,
 			total_qty=int(request.form["B_total_qty"]),
 			current_qty=0,
-			confirm=False, 
 			requester=False
 			)
 		db_session.add(new_participant_b)
 		db_session.commit()
 
-		flash("Trade Successfully Requested!", "success")
+		flash("Your trade with " + item_b.user.biz_name + " was successfully requested.")
 		return redirect(url_for('home'))
 	# get entire item from DB
 	return render_template("open_request.html", item=item)
@@ -342,19 +354,30 @@ def open_request():
 """ Get notifications for any new trade requests """
 
 def get_notifications():
-	notifications = db_session.query(Participant).filter_by(id=g.user_id).filter(Participant.requester == False, Participant.confirm == False).all()
-	return notifications
+	notifications = db_session.query(Participant).filter_by(user_id=g.user_id, requester=False, confirm=None).all()
+
+	all_my_trades = db_session.query(Participant).filter_by(user_id=g.user_id, requester=True).all()
+
+	new_confirms = [participant for participant in all_my_trades if participant.trade.participants[1].confirm == True]
+
+	print new_confirms, "MLAHHCHCHHCHCHCHCHCHHCH"
+
+	return notifications, new_confirms
+
+
 
 
 """ Accept trade request"""
 
-@app.route("/accept_trade", methods=["POST"])
-def accept_trade():
-	pass
-	# yes_trade = Participant.query.get(id)
-	# print yes_trade
-	# flash("Trade accepted! Email to confirm details")
-	# return redirect("/home")
+@app.route("/accept_trade/<int:id>", methods=["GET"])
+def accept_trade(id):
+	yes_participant = Participant.query.get(id)
+	trade_partner = yes_participant.trade.participants[0].user.email
+	yes_participant.confirm = True
+	db_session.add(yes_participant)
+	db_session.commit()
+	flash("Trade accepted! Email " + trade_partner + " to confirm details.")
+	return redirect("/home")
 
 
 
@@ -369,7 +392,7 @@ def refuse_trade():
 #####################################################
 #####################################################
 
-@app.route("/manage_account")
+@app.route("/manage_trades")
 def manage_account():
 	pass
 

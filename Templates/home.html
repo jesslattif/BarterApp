@@ -5,15 +5,12 @@
 		<h1>Welcome to Barter Professional, {{ user.first_name }}!</h1>
 
 			
-			<h2> Choose An Option: </h2>
+			<h2> What do you want to do? </h2>
 			<br>
-				<ul>
+				<h3><ul>
 					<a href="{{url_for('view_categories', id=user_id)}}"> 		Search for Stuff to Trade
-					</a>
-					<br>
-					<br>
-					<a href="{{url_for('user_list', id=user_id)}}">
-						Search By User
+						<br> by Business Name, Item or Category
+
 					</a>
 					<br>
 					<br>	
@@ -22,12 +19,9 @@
 					</a>
 						<br>
 						<br>
-					<a href="/{{url_for('manage_trades', id=user_id)}}">		Manage My Trades
-					</a>
-						<br>
-						<br>
 					<a href="{{url_for('manage_account', id=user_id)}}">		Account Settings
 					</a>
+				</h3>
 					
 	</div>
 	{% endblock %}
