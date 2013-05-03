@@ -1,0 +1,39 @@
+.navbar-inverse .navbar-inner {
+background: none;
+border: none;
+box-shadow:none;
+}
+
+
+body {
+background:url("/static/bootstrap/img/sf_city.jpg") no-repeat top left;
+background-size: 100%
+
+}
+
+.wrapper {
+	background-color: white;
+	padding: 20px;
+	opacity: .9;
+}
+
+.block.sidebar {
+  border:1px solid #ccc;
+  border-radius: 5px 5px 0 0;
+  background-color:#fff;
+
+}
+.block.sidebar .header p{
+    padding:5px 10px;
+    background:url('/static/img/dark_exa.png') repeat top left;
+}
+
+.block.sidebar p.heading {
+  font-size:14px;
+  font-weight:bold;
+  color:#fff;
+}
+
+.sidebar .alert {
+    margin:10px;
+}

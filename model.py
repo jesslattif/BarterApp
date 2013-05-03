@@ -1,11 +1,12 @@
 # Using PostgreSQL which I don't know, so not sure how to format these. 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine, types 
-from sqlalchemy import Column, Integer, String, Date, Boolean
+from sqlalchemy import Column, Integer, String, Date, DateTime, Boolean
 from sqlalchemy.orm import sessionmaker, scoped_session 	#Describes how to interact with database, needs to be instantiated.
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship, backref
 import json
+import datetime
 
 engine = create_engine("sqlite:///barters.db", echo=False) 		#Creates engine that connects to db.
 session = scoped_session(sessionmaker(
@@ -57,9 +58,9 @@ class Trade(Base):
 	__tablename__ = 'trades'
 
 	id = Column(Integer, primary_key=True)
-	open_date = Column(Date) #timestamp?
-	transaction_date = Column(Date, nullable=True)
-	close_date = Column(Date, nullable=True)
+	open_date = Column(DateTime, default=datetime.datetime.utcnow) #timestamp?
+	transaction_date = Column(DateTime, nullable=True)
+	close_date = Column(DateTime, nullable=True)
 
 
 class Participant(Base): #participants in specific trades
@@ -72,9 +73,11 @@ class Participant(Base): #participants in specific trades
 	total_qty = Column(Integer) 
 	current_qty = Column(Integer, nullable=True)
 	confirm = Column(Boolean)
+	requester = Column(Boolean)
 	user = relationship("User", backref=backref("participants"))
 	item = relationship("Item", backref=backref("participants"))
 	trade = relationship("Trade", backref=backref("participants"))
+
 
 
 class Category(Base):

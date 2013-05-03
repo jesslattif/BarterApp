@@ -48,7 +48,7 @@
               </li>
               {% endif %}
                   <li><a href="/view_categories">Find Stuff</a></li>
-                  <li><a href="/find_business">Find People</a></li>
+                  <li><a href="/find_users">Find People</a></li>
                   <li><a href="/manage_trades">Manage Trades</a></li>
             </ul>
 
@@ -69,6 +69,8 @@
         </div>
       </div>
     </div>
+<div class="row-fluid">
+  <div class="span8">
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         {% for category, message in messages %}
@@ -79,18 +81,15 @@
       </div>
 
  
-
+  <div class="span4 sidebar">
   {% if g.notifications %}
-    <div class="alert alert-info">
+    <div class="alert clearfix alert-info">
       {% for note in g.notifications %}
         <p><strong> 
-           {{ note.trade.participants[0].user.first_name }} wants to trade {{ note.trade.participants[0].item.name }} for {{ note.trade.participants[1].item.name }}             
-        <a href="/accept_trade.html" class="btn btn-mini btn-info">
-            Accept Trade</a>
-        <a href="/refuse_trade.html" class="btn btn-mini btn-error">
-            Refuse Trade</a>
-            </p></strong>
+           {{ note.trade.participants[0].user.first_name }} wants to trade {{ note.trade.participants[0].item.name }} for {{ note.trade.participants[1].item.name }} 
+        </p></strong>
     </div> <!-- this closes alert div -->
+  </div> <!-- this closes sidebar div -->
   {% endfor %}
 {% endif %}
 

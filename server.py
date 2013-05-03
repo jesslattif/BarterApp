@@ -3,6 +3,7 @@ from flask import Flask, flash, render_template, redirect, request, session, url
 import model
 from model import User, Item, Participant, Trade, Category, session as db_session
 import json
+import datetime
 
 app  = Flask(__name__)
 app.secret_key ="RZEB`YhM#EO|rhVWx~|U9,iYauiv l7B1t=ntDr7l-W&aM}JS2%"
@@ -18,7 +19,8 @@ def before_request():
 		g.user = None
 	else:
 		g.user = db_session.query(User).get(g.user_id)
-	
+		g.notifications = get_notifications()
+
 
 
 """Index""" 
@@ -80,12 +82,12 @@ def authenticate(): # authenticate user
 		email=email, password=password).first() #checks for user in db
 
 	if not user: #redirect to log-in if info not correct
-		flash("Log-in failed; please try again.", "error")
+		flash("Sorry, we couldn't find your email/password combo. Try again!", "error")
 		return render_template('index.html')
 
 
 	else:
-		print "SUCCEEDED" 
+		
 		session["user_id"] = user.id #set session
 		flash("Login Successful", "success")
 		return redirect(url_for('home')) #redirects to user's page for unique user id
@@ -98,18 +100,19 @@ def home():
 	user = db_session.query(User).get(g.user_id)
 	return render_template("home.html", user=user)
 
-@app.route("/my_barter_profile")
-def my_barter_profile():
-	user = db_session.query(User).get(g.user_id)
-	user_name = user.first_name
-
-	return render_template(
-		"my_barter_profile.html", user_name = user_name)
+""" Log out """
 
 @app.route("/log_out", methods=['GET'])
 def log_out():
 	session.pop("user_id", None)
 	return redirect("/")
+
+
+""" Edit User's Account Settings """
+
+@app.route("/my_account")
+def my_account():
+	pass
 
 ######################################################
 ######################################################
@@ -273,8 +276,8 @@ def user_list():
 	pass
 
 
-@app.route("/find_people")
-def find_people():
+@app.route("/find_business")
+def find_business():
 	pass
 
 
@@ -289,38 +292,75 @@ def find_people():
 
 @app.route("/open_request", methods=["GET", "POST"])
 def open_request():
-	#serve a form
-	if request.method == "POST":
+	if request.method == "GET":
+		# get item id from url
+		item_id = request.args.get("item")
+		item = db_session.query(Item).filter_by(id=item_id).one()
+	else:
+		#instantiate new trade
+		item_b = db_session.query(Item).filter_by(id=request.form["B_item_id"]).one()
+		new_trade = Trade(
+			open_date=datetime.datetime.utcnow()
+			)
+		db_session.add(new_trade)
+		db_session.commit()
+		
+
+		#instantiate self as new participant
+		new_participant_a = Participant(
+			user_id=g.user.id, 
+			item_id=int(request.form["A_item_id"]),
+			trade_id=new_trade.id,
+			total_qty=int(request.form["A_total_qty"]),
+			current_qty=0,
+			confirm=False, 
+			requester=True	
+			)
+		db_session.add(new_participant_a)
+		db_session.commit()
+
+
+		#instantiate other person as new participant
+		new_participant_b = Participant(
+			user_id=item_b.user.id,
+			item_id=int(request.form["B_item_id"]),
+			trade_id=new_trade.id,
+			total_qty=int(request.form["B_total_qty"]),
+			current_qty=0,
+			confirm=False, 
+			requester=False
+			)
+		db_session.add(new_participant_b)
+		db_session.commit()
+
 		flash("Trade Successfully Requested!", "success")
-		return redirect(url_for('my_barter_profile'))
-	# get item id from url
-	item_id = request.args.get("item")
+		return redirect(url_for('home'))
 	# get entire item from DB
-	item = db_session.query(Item).filter_by(id=item_id).one()
 	return render_template("open_request.html", item=item)
-	
-	
-
-	""" create a Participant B (not self) in the Trade with:
-		# user_id 
-		# item_id 
-		# trade_id
-		# total_qty ** need from form **
-		# current_qty = 0
-		# confirm = False
-
-		create Participant A (self) in the Trade with:
-		# user_id - g.user_id
-		# item_id - ** need from form **
-		# trade_id - 
-		# total_qty ** need from form **
-		# current_qty = 0
-		# confirm  = False
-		"""
 
 
-@app.route("/manage_trades")
-def manage_trades():
+""" Get notifications for any new trade requests """
+
+def get_notifications():
+	notifications = db_session.query(Participant).filter_by(id=g.user_id).filter(Participant.requester == False, Participant.confirm == False).all()
+	return notifications
+
+
+""" Accept trade request"""
+
+@app.route("/accept_trade", methods=["POST"])
+def accept_trade():
+	pass
+	# yes_trade = Participant.query.get(id)
+	# print yes_trade
+	# flash("Trade accepted! Email to confirm details")
+	# return redirect("/home")
+
+
+
+""" Refuse trade request """
+@app.route("/refuse_trade", methods=["POST"])
+def refuse_trade():
 	pass
 
 ######################################################

@@ -1,64 +1,72 @@
 {% extends "layout.html" %}
 {% block body %}
-<div class="container">
-	 
- <h1>
- 	Search for items by name:
- </h1>
-	<h3>
-		<form method ="GET" action ="/search_all_cats">
-			What are you looking for?
-			<input type ="text" name="search_term">
-			 <button type ="submit" value="search" class="btn">
-			 	search
-			 </button>
-		</form>
-	</h3>
-	 <br>
-	 <br>
-	 <br>
-	<h1>
-		Search for items by category:
-	</h1>
- 	<table>
-		<tr>
-			<td>
-				<strong>
-					Goods
-				</strong>
-			</td>
-		</tr>
-			
- 		{% for good in goods %}
- 		<tr>
- 			<td>
- 				<a href="{{url_for('display_items', cat_id=good.id)}}">
- 					{{ good.name }}
- 				</a>
- 			</td> 
- 		</tr>
- 			{% endfor %}
- 	</table>
- 	<br>
- 	<br>
- 	<br>
-	<table>
- 		<tr>
- 			<td>
- 				<strong>
- 					Services
- 				</strong>
- 			</td>
- 		</tr>
-			{% for service in services %}
- 		 	<tr>
- 		 		<td>
- 		 			<a href="{{url_for('display_items', cat_id=service.id)}}">	{{ service.name }}
- 		 			</a>
- 		 		</td>
- 		 	</tr>
- 		 		{% endfor %}
- 		 </table>
-		<br><br><br>
-</div>
-	{% endblock %}
+<div class="container wrapper">	
+<div class="row-fluid">
+  <div class="span12">
+    <div class="row-fluid">
+      <div class="span5">
+        <h1>Search by Item</h1>
+        <form method ="GET" action ="/search_all_cats">
+				<h3>What are you looking for?</h3><br>
+				<input type ="text" name="search_term">
+				 <button type ="submit" value="search" class="btn">
+				 	search
+				 </button>
+			</form>
+
+		<h1>Search by Company</h1>
+        <form method ="GET" action ="/search_all_cats">
+			<h4>Enter the name of the company<br>
+				 or business you're looking for:</h4>
+				<input type ="text" name="search_term">
+				 <button type ="submit" value="search" class="btn">
+				 	search
+				 </button>
+			</form>
+      </div>
+      <div class="span6">
+      	<h1>Search by Category</h1>
+              <div class="row-fluid">
+          <div class="span6"><table>
+					<tr>
+						<td>
+							<strong>
+								<h3>Goods</h3>
+							</strong>
+						</td>
+					</tr>
+						
+			 		{% for good in goods %}
+			 		<tr>
+			 			<td>
+			 				<a href="{{url_for('display_items', cat_id=good.id)}}">
+			 					{{ good.name }}
+			 				</a>
+			 			</td> 
+			 		</tr>
+			 			{% endfor %}
+			 	</table></div> <!-- closes "services" small column -->
+          <div class="span6"><table>
+			 		<tr>
+			 			<td>
+			 				<strong>
+			 					<h3>Services</h3>
+			 				</strong>
+			 			</td>
+			 		</tr>
+						{% for service in services %}
+			 		 	<tr>
+			 		 		<td>
+			 		 			<a href="{{url_for('display_items', cat_id=service.id)}}">	{{ service.name }}
+			 		 			</a>
+			 		 		</td>
+			 		 	</tr>
+			 		 		{% endfor %}
+			 		 </table></div><!-- closes "goods" small column -->
+        </div>
+   	</div><!-- closes first "span6" -->
+    </div><!-- closes 2nd "row fluid" -->
+  </div><!-- closes "span12"" -->
+</div> <!-- closes first "row fluid" -->
+</div> <!-- closes container wrapper -->
+{% endblock %}

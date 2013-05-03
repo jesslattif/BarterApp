@@ -1,10 +1,10 @@
 {% extends "layout.html" %}
 {% block body %}
-<div class="container">
+<div class="container wrapper">
 	<h1>New Trade
 
 	<h2><form action="/open_request" method="POST">
-		<input type="hidden" name="item_id" value="{{ item.id }}">
+		<input type="hidden" name="B_item_id" value="{{ item.id }}">
 		<div>
 			{{ item.name }} 
 			<br>
