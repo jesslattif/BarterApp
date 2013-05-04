@@ -244,7 +244,7 @@ def search_all_cats():
 		return redirect(url_for("view_categories"))
 	return render_template("display_items.html",
 							items=items,
-							search_term=search_term, title = "All items matching ")
+							search_term=search_term, title = "All Items Matching ")
 
 
 """View all items in a Category"""
@@ -259,7 +259,7 @@ def display_items(cat_id):
 		flash("Sorry, no items are available to trade in that category", "error")
 		return redirect(url_for("view_categories"))
 	return render_template(
-		"display_items.html", items=items, search_term=cat.name, title="All items in ")
+		"display_items.html", items=items, search_term=cat.name, title="All Items in ")
 
 """ Click on an item to see users who've posted them """
 
@@ -285,8 +285,12 @@ def find_business():
 		flash("Please enter a valid search term", "error")
 		return redirect(url_for("view_categories"))
 	# get businesses (users) with names matching search term:
+	# items = db_session.query(Item).filter(Item.name.like(
+	# "%" + search_term + "%")).filter(Item.user_id != g.user.id).all()
 	bizs = db_session.query(User).filter(User.biz_name.like(
-		"%" + search_term + "%")).filter(Item.user_id != g.user.id).all()
+		"%" + search_term + "%")).filter(User.id != g.user.id).all()
+	# import pdb; pdb.set_trace()
+	# print "*****************", bizs
 	if not bizs:
 		flash("Sorry, nothing matched your search.", "error")
 		return redirect(url_for("view_categories"))
@@ -359,8 +363,6 @@ def get_notifications():
 	all_my_trades = db_session.query(Participant).filter_by(user_id=g.user_id, requester=True).all()
 
 	new_confirms = [participant for participant in all_my_trades if participant.trade.participants[1].confirm == True]
-
-	print new_confirms, "MLAHHCHCHHCHCHCHCHCHHCH"
 
 	return notifications, new_confirms
 

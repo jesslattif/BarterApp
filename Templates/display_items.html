@@ -4,7 +4,7 @@
 
 		<h1>{{ title }}"{{ search_term }}"</h1>
 
-		<table>
+	<table>
 		<tr>
 			<td>
 				<strong>
@@ -16,13 +16,13 @@
 					Description
 				</strong>
 			</td>
-			{% if title=="All Items Matching " or title =="All Businesses Matching "%}
+			{% if title=="All items matching " or title=="All Businesses Matching " %}
 			<td>
 				<strong>
 					Category
 				</strong>
 			</td>
-			{% endif %} <!-- ends "if title == items matching" -->
+			{% endif %}
 			<td>
 				<strong>
 					User
@@ -43,11 +43,11 @@
 				<td>
 					{{ item.description }}
 				</td>
-				{% if title=="All items matching " %}
+				{% if title=="All Items Matching " %}
 				<td>
 					{{ item.category.name }}
 				</td>
-				{% endif %} <!-- ends "if title == items matching" -->
+				{% endif %}
 				<td>
 					<a href="/display_user/{{ item.user.id }}">
 					{{ item.user.first_name }} 
@@ -63,14 +63,13 @@
 					</a>
 				</td>
 			</tr>
-		{% endfor %} <!-- ends "for items" -->
-		{% endif %} <!-- ends "if items" -->
+		{% endfor %}
+		{% endif %}
 
-
-		{% if bizs%}
+		{% if bizs %}
 		{% for biz in bizs %}
 		{% for item in biz.items %}
-			<tr>	
+				<tr>
 				<td>
 					{{ item.name }}
 				</td>
@@ -81,22 +80,25 @@
 					{{ item.category.name }}
 				</td>
 				<td>
-					{{ biz.first_name }} 
-					{{ biz.last_name }}
-				</td>
-					<td>
-					{{ biz.biz_name }}
+					<a href="/display_user/{{ biz.id }}">
+						{{ biz.first_name }} 
+						{{ biz.last_name }}
+					</a>
+				</td> 
+				<td>
+					<a href="/display_user/{{ biz.id }}">
+						{{ item.user.biz_name }} 
+					</a>
 				</td> 
 				<td>
 					<a href="/open_request?item={{ item.id }}" class = "btn">
-						Trade
+					Trade
 					</a>
 				</td>
 			</tr>
-		{% endfor %}
-		{% endfor %} <!-- ends "for bizs" -->
-		{% endif %} <!-- ends "if bizs" -->
-
-	</table>
-
+	{% endfor %}
+	{% endfor %}
+	{% endif %}
+</table>
+</div>
 {% endblock %}
