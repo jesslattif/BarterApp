@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
 {% block body %}
-<div class="container wrapper">
+
  <h1>My Items</h1>
  	<h3> Click on any item name or description to edit it</h3>
- 		<table>
+ 		<table class="table">
 			<tr>
 				<td>
 					<strong>
@@ -50,10 +50,9 @@
  	</table>
 
 	<h2>
-		<a href="{{ url_for('add_item') }}">
-			Click here to add items
+		<a href="{{ url_for('add_item') }}" class="btn btn-success btn-large" >
+			Add New Item
 		</a>
 	</h2>
 
-</div>
 {% endblock %}

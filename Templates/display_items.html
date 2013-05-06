@@ -1,10 +1,9 @@
 {% extends "layout.html" %}
 {% block body %}
-<div class="container wrapper">
 
 		<h1>{{ title }}"{{ search_term }}"</h1>
 
-	<table>
+	<table class="table">
 		<tr>
 			<td>
 				<strong>
@@ -91,7 +90,7 @@
 					</a>
 				</td> 
 				<td>
-					<a href="/open_request?item={{ item.id }}" class = "btn">
+					<a href="/open_request?item={{ item.id }}" class="btn">
 					Trade
 					</a>
 				</td>
@@ -100,5 +99,4 @@
 	{% endfor %}
 	{% endif %}
 </table>
-</div>
 {% endblock %}

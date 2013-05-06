@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+{% block body %}
+<h2>
+	{{ g.user.first_name }}'s Trade History
+</h2>
+
+<table class="table">
+	<tr>
+		<td>
+			<strong>
+				Date
+			</strong>
+		</td>
+		<td>
+			<strong>
+				You Traded
+			</strong>
+		</td>
+		<td>
+			<strong>
+				With
+			</strong>
+		</td><td>
+			<strong>
+				For
+			</strong>
+		</td><td>
+			<strong>
+				Still Active?
+			</strong>
+		</td>
+		</tr>
+
+		{% for trade in participants %}
+		<tr>
+			<td>
+				{{ trade.trade.open_date }}
+			</td>
+			<td>
+				{{ trade.item.name }}
+			</td>
+			<td>
+				{{ trade.trade.participants[1].user.biz_name }}
+			</td>
+			<td>
+				{{ trade.trade.participants[1].item.name }}
+			</td>
+			<td> 
+				{% if trade.trade.close_date == None %}
+				Yes
+				{% else %}
+				No
+				{% endif %}
+			</td>
+		</tr>
+
+		{% endfor %}
+{% endblock %}

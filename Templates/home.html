@@ -1,16 +1,13 @@
   	{% extends "layout.html" %}
   	{% block body %}
-	<div class="container wrapper">
 
-		<h1>Welcome to Barter Professional, {{ user.first_name }}!</h1>
+		<h1>Welcome to Barter Pro, {{ user.first_name }}!</h1>
 
 			
 			<h2> What do you want to do? </h2>
 			<br>
 				<h3><ul>
-					<a href="{{url_for('view_categories', id=g.user.id)}}"> 		Search for Stuff to Trade
-						<br> by Business Name, Item or Category
-
+					<a href="{{url_for('view_categories', id=g.user.id)}}"> 		Find Stuff to Trade
 					</a>
 					<br>
 					<br>	
@@ -23,6 +20,5 @@
 						My Trade History
 					</a>
 				</h3>
-					
-	</div>
+
 	{% endblock %}

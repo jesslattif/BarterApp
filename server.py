@@ -399,7 +399,6 @@ def refuse_trade(id):
 	no_trade.confirm = False
 	db_session.add(no_trade)
 	db_session.commit()
-	print "****************", no_trade.confirm
 
 	if no_trade.trade.participants[0].confirm == None:
 		trade_partner = no_trade.trade.participants[0].user.email
@@ -407,11 +406,12 @@ def refuse_trade(id):
 	return redirect("/home")
 
 
+@app.route("/trade_history")
+def trade_history():
+	participants = db_session.query(Participant).filter_by(user_id=g.user.id).all()
 
+	return render_template("trade_history.html", participants=participants)
 
-@app.route("/trade_history/<int:id>")
-def trade_history(id):
-	pass
 
 ######################################################
 ######################################################

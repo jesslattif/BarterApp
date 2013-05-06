@@ -1,10 +1,10 @@
 {% extends "layout.html" %}
 {% block body %}
-<div class="container wrapper">
+
 		<h1>Info for {{ user.biz_name }}</h1>
 		<h2>Member Name: {{ user.first_name }} {{ user.last_name }}</h2> 
 		<br>
-				<table>
+				<table class="table">
 					<td>
 					<strong>
 						Item
@@ -35,7 +35,5 @@
 					{% endfor %}
 				</table>
 
-				
-	
-</div>
+
 {% endblock %}
