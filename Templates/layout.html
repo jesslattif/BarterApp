@@ -83,13 +83,15 @@
       <div class="alert alert-info">
         <p>
           <strong> 
+          </h2>
            {{ note.trade.participants[0].user.biz_name }} wants to trade {{ note.trade.participants[0].item.name }} for {{ note.trade.participants[1].item.name }}             
-              <a href="/accept_trade/{{ note.trade.participants[1].id }}" class="btn btn-mini btn-info">
+              <a href="/accept_trade/{{ note.trade.id }}" class="btn btn-mini btn-info">
                 Accept Trade
               </a>
-              <a href="/refuse_trade.html" class="btn btn-mini btn-error">
+              <a href="/refuse_trade/{{ note.trade.id }}" class="btn btn-mini btn-error">
                 Refuse Trade
               </a>
+            </h2>
           </strong>
         </p>
       </div> 
@@ -101,15 +103,32 @@
       <div class="alert alert-info">
         <p>
           <strong> <!-- participants[1] is the other party, participants[0] is self -->
-           {{ confirm.trade.participants[1].user.biz_name }} confirmed trading {{ confirm.trade.participants[0].item.name }} for {{ confirm.trade.participants[1].item.name }}! 
-           <br>
-           <a href="mailto:{{ confirm.trade.participants[1].user.email }}">
-           Email them to work out details:      
+           {{ confirm.trade.participants[1].user.biz_name }} confirmed trading {{ confirm.trade.participants[0].item.name }} for {{ confirm.trade.participants[1].item.name}} 
+          <br>
+          <a href="mailto:{{ confirm.trade.participants[1].user.email }}">
+            Email them to work out details:      
               {{ confirm.trade.participants[1].user.email }}
-            </a>
-               
+          </a>
+          <a href="/accept_trade/{{ confirm.trade.id }}" class="btn btn-mini btn-info"> 
+            Mark as read
+          </a>
+        </p>
+      </strong>
+    </div>
+  {% endfor %}
+{% endif %}
+
+{% if g.new_refusals %}
+    {% for refuse in g.new_refusals %}
+      <div class="alert alert-error">
+        <p>
+          <strong> 
+            <h3><!-- participants[1] is the other party, participants[0] is self -->
+           {{ refuse.trade.participants[1].user.biz_name }} refused your request to trade {{ refuse.trade.participants[0].item.name }} for {{ refuse.trade.participants[1].item.name }}
+               <a href="/refuse_trade/{{ refuse.trade.id }}" class="btn btn-mini btn-info"> 
+                Mark as read
               </a>
-             
+            </h3>
            </strong> 
          </p>
       </div>

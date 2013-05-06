@@ -19,8 +19,7 @@ def before_request():
 		g.user = None
 	else:
 		g.user = db_session.query(User).get(g.user_id)
-		g.notifications, g.new_confirms = get_notifications()
-		print "***************", g.notifications
+		g.notifications, g.new_confirms, g.new_refusals = get_notifications()
 
 
 
@@ -358,47 +357,67 @@ def open_request():
 """ Get notifications for any new trade requests """
 
 def get_notifications():
+	#gets all new trades by getting participant where self is not the requester and self has not confirmed yet
 	notifications = db_session.query(Participant).filter_by(user_id=g.user_id, requester=False, confirm=None).all()
-
+	#gets all one's own trades by getting participant where self is the requester
 	all_my_trades = db_session.query(Participant).filter_by(user_id=g.user_id, requester=True).all()
 
-	new_confirms = [participant for participant in all_my_trades if participant.trade.participants[1].confirm == True]
+	new_confirms = [participant for participant in all_my_trades if participant.trade.participants[1].confirm == True and participant.trade.participants[0].confirm == None]
 
-	return notifications, new_confirms
+	new_refusals = [participant for participant in all_my_trades if participant.trade.participants[1].confirm == False and participant.trade.participants[0].confirm == None]
+
+	return notifications, new_confirms, new_refusals
 
 
 
 
 """ Accept trade request"""
-
+# NB: id being passed is trade ID
 @app.route("/accept_trade/<int:id>", methods=["GET"])
 def accept_trade(id):
-	yes_participant = Participant.query.get(id)
-	trade_partner = yes_participant.trade.participants[0].user.email
+	# get participant entry for user
+	yes_participant = Participant.query.filter_by(user_id=g.user.id, trade_id=id).one()
+	#change the "confirm" value to True
 	yes_participant.confirm = True
 	db_session.add(yes_participant)
 	db_session.commit()
-	flash("Trade accepted! Email " + trade_partner + " to confirm details.")
-	return redirect("/home")
+	# if the other person hasn't already seen your confirmation:
+	if yes_participant.trade.participants[0].confirm == None: 
+		trade_partner = yes_participant.trade.participants[0].user.email
+		flash("Trade accepted! Email " + trade_partner + " to confirm details.")
+	return redirect('/home')
+
 
 
 
 """ Refuse trade request """
-@app.route("/refuse_trade", methods=["POST"])
-def refuse_trade():
+# NB: id being passed is trade ID
+@app.route("/refuse_trade/<int:id>", methods=["GET"])
+def refuse_trade(id):
+	#get participant entry for user
+	no_trade = Participant.query.filter_by(user_id=g.user.id, trade_id=id).one()
+	no_trade.confirm = False
+	db_session.add(no_trade)
+	db_session.commit()
+	print "****************", no_trade.confirm
+
+	if no_trade.trade.participants[0].confirm == None:
+		trade_partner = no_trade.trade.participants[0].user.email
+		flash("You refused this trade. If you'd like to re-negotiate, email " + trade_partner + ".")
+	return redirect("/home")
+
+
+
+
+@app.route("/trade_history/<int:id>")
+def trade_history(id):
 	pass
 
 ######################################################
 ######################################################
-######### These are the Trade functions #########
+######### End of Trade functions #########
 #####################################################
 #####################################################
-
-@app.route("/manage_trades")
-def manage_account():
-	pass
-
-
 
 if __name__ == "__main__":
 	app.run(debug = True)

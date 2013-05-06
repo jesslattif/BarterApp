@@ -8,18 +8,19 @@
 			<h2> What do you want to do? </h2>
 			<br>
 				<h3><ul>
-					<a href="{{url_for('view_categories', id=user_id)}}"> 		Search for Stuff to Trade
+					<a href="{{url_for('view_categories', id=g.user.id)}}"> 		Search for Stuff to Trade
 						<br> by Business Name, Item or Category
 
 					</a>
 					<br>
 					<br>	
-					<a href="{{url_for('manage_items', id=user_id)}}"> 
+					<a href="{{url_for('manage_items', id=g.user.id)}}"> 
 						Manage My Items
 					</a>
 						<br>
 						<br>
-					<a href="{{url_for('manage_account', id=user_id)}}">		Account Settings
+					<a href="{{url_for('trade_history', id=g.user.id)}}">		
+						My Trade History
 					</a>
 				</h3>
 					
