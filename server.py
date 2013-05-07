@@ -153,7 +153,7 @@ def add_item():
 	# Get all categories 
 	# Put all categories into a list
 	# Send list with template
-		
+	flash("item added", "success")
 	return render_template("add_item.html", 
 							user=g.user_id, cats=cats_json)
 
@@ -317,7 +317,7 @@ def open_request():
 		#instantiate new trade
 		item_b = db_session.query(Item).filter_by(id=request.form["B_item_id"]).one()
 		new_trade = Trade(
-			open_date=datetime.datetime.utcnow()
+			open_date = datetime.datetime.utcnow()
 			)
 		db_session.add(new_trade)
 		db_session.commit()
@@ -348,7 +348,7 @@ def open_request():
 		db_session.add(new_participant_b)
 		db_session.commit()
 
-		flash("Your trade with " + item_b.user.biz_name + " was successfully requested.")
+		flash("Your trade with " + item_b.user.biz_name + " was successfully requested.", "success")
 		return redirect(url_for('home'))
 	# get entire item from DB
 	return render_template("open_request.html", item=item)
@@ -362,9 +362,14 @@ def get_notifications():
 	#gets all one's own trades by getting participant where self is the requester
 	all_my_trades = db_session.query(Participant).filter_by(user_id=g.user_id, requester=True).all()
 
-	new_confirms = [participant for participant in all_my_trades if participant.trade.participants[1].confirm == True and participant.trade.participants[0].confirm == None]
+	if len(all_my_trades) != 0:
 
-	new_refusals = [participant for participant in all_my_trades if participant.trade.participants[1].confirm == False and participant.trade.participants[0].confirm == None]
+		new_confirms = [participant for participant in all_my_trades if participant.trade.participants[1].confirm == True and participant.trade.participants[0].confirm == None]
+
+		new_refusals = [participant for participant in all_my_trades if participant.trade.participants[1].confirm == False and participant.trade.participants[0].confirm == None]
+	else:
+		new_confirms = []
+		new_refusals = []
 
 	return notifications, new_confirms, new_refusals
 
@@ -384,8 +389,8 @@ def accept_trade(id):
 	# if the other person hasn't already seen your confirmation:
 	if yes_participant.trade.participants[0].confirm == None: 
 		trade_partner = yes_participant.trade.participants[0].user.email
-		flash("Trade accepted! Email " + trade_partner + " to confirm details.")
-	return redirect('/home')
+		flash("Trade accepted! Email " + trade_partner + " to confirm details.", "success")
+	return redirect("/home")
 
 
 
@@ -410,7 +415,22 @@ def refuse_trade(id):
 def trade_history():
 	participants = db_session.query(Participant).filter_by(user_id=g.user.id).all()
 
+	if not participants:
+		flash("No trades found", "error")
+
 	return render_template("trade_history.html", participants=participants)
+
+@app.route("/close_trade/<int:id>", methods=["GET"])
+def close_trade(id):
+	trade = Trade.query.filter_by(id=id).one()
+	trade.close_date = datetime.datetime.utcnow()
+	db_session.add(trade)
+	db_session.commit()
+	flash("Your trade has been marked as complete.", "success")
+	return redirect("/trade_history")
+
+
+
 
 
 ######################################################

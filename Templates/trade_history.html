@@ -14,19 +14,29 @@
 		<td>
 			<strong>
 				You Traded
+				<br>
+				<small>Item/Amount</small>
 			</strong>
 		</td>
 		<td>
 			<strong>
 				With
 			</strong>
-		</td><td>
+		</td>
+		<td>
 			<strong>
 				For
+				<br>
+				<small>Item/Amount</small>
 			</strong>
-		</td><td>
+		</td>
+		<td>
 			<strong>
 				Still Active?
+			</strong>
+		</td>
+		<td>
+			<strong>
 			</strong>
 		</td>
 		</tr>
@@ -37,22 +47,31 @@
 				{{ trade.trade.open_date }}
 			</td>
 			<td>
-				{{ trade.item.name }}
+				{{ trade.trade.participants[1].total_qty}} {{ trade.item.name }}
 			</td>
 			<td>
-				{{ trade.trade.participants[1].user.biz_name }}
+				{{ trade.trade.participants[0].user.biz_name }}
 			</td>
 			<td>
-				{{ trade.trade.participants[1].item.name }}
+				{{ trade.trade.participants[0].total_qty }} {{ trade.trade.participants[0].item.name }}
 			</td>
-			<td> 
-				{% if trade.trade.close_date == None %}
-				Yes
-				{% else %}
-				No
-				{% endif %}
-			</td>
-		</tr>
+			
+			{% if not trade.trade.close_date %}
+					<td> 
+						Yes
+					</td>
+					<td>
+						<a href="/close_trade/{{ trade.trade.id }}" class="btn btn-info">
+							Mark as complete
+						</a>
+					</td>
+				</tr>
+			{% else %}
+					<td> 
+						No
+					</td>
+				</tr>
+			{% endif %}
 
 		{% endfor %}
 {% endblock %}
